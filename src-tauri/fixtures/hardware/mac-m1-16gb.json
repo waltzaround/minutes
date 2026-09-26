@@ -1,0 +1,76 @@
+{
+  "id": "mac-m1-16gb",
+  "description": "16 GB M1 MacBook Air",
+  "hardware": {
+    "os": "macos",
+    "osVersion": "macOS 15.6",
+    "osVersionParts": [
+      15,
+      6,
+      0
+    ],
+    "osBuild": null,
+    "architecture": "aarch64",
+    "cpu": {
+      "model": "Apple M1",
+      "physicalCores": 8,
+      "logicalCores": 8,
+      "avx2": null,
+      "avx512": null,
+      "appleSiliconGeneration": 1,
+      "appleSiliconVariant": null
+    },
+    "memory": {
+      "totalBytes": 17179869184,
+      "availableBytes": 9663676416,
+      "pressure": "low"
+    },
+    "disk": {
+      "availableBytes": 128849018880,
+      "totalBytes": 536870912000,
+      "mountPoint": "/"
+    },
+    "gpus": [
+      {
+        "vendor": "Apple",
+        "model": "Apple M1",
+        "vramBytes": 11456825262,
+        "unifiedMemory": true,
+        "integrated": true,
+        "metal": true,
+        "cuda": false,
+        "vulkan": false
+      }
+    ],
+    "audio": {
+      "microphoneAvailable": true,
+      "microphonePermission": "granted",
+      "systemAudioAvailable": true,
+      "systemAudioPermission": "unknown",
+      "systemAudioUnavailableReason": null,
+      "inputDevices": [
+        {
+          "id": "fixture:mic",
+          "name": "Built-in Microphone",
+          "isDefault": true,
+          "channels": 1,
+          "sampleRate": 48000
+        }
+      ],
+      "outputDevice": {
+        "id": "fixture:out",
+        "name": "Speakers",
+        "isDefault": true,
+        "channels": 2,
+        "sampleRate": 48000
+      }
+    }
+  },
+  "benchmark": null,
+  "expected": {
+    "profile": "standard",
+    "llmModelId": "nemotron-3-nano-4b-q4km",
+    "profileAfterBenchmark": null,
+    "llmModelIdAfterBenchmark": null
+  }
+}

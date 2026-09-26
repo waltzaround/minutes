@@ -1,0 +1,76 @@
+{
+  "id": "mac-32gb",
+  "description": "32 GB Apple Silicon Mac (M2 Pro)",
+  "hardware": {
+    "os": "macos",
+    "osVersion": "macOS 15.6",
+    "osVersionParts": [
+      15,
+      6,
+      0
+    ],
+    "osBuild": null,
+    "architecture": "aarch64",
+    "cpu": {
+      "model": "Apple M2 Pro",
+      "physicalCores": 12,
+      "logicalCores": 12,
+      "avx2": null,
+      "avx512": null,
+      "appleSiliconGeneration": 2,
+      "appleSiliconVariant": "Pro"
+    },
+    "memory": {
+      "totalBytes": 34359738368,
+      "availableBytes": 21474836480,
+      "pressure": "low"
+    },
+    "disk": {
+      "availableBytes": 128849018880,
+      "totalBytes": 536870912000,
+      "mountPoint": "/"
+    },
+    "gpus": [
+      {
+        "vendor": "Apple",
+        "model": "Apple M2 Pro",
+        "vramBytes": 22906503168,
+        "unifiedMemory": true,
+        "integrated": true,
+        "metal": true,
+        "cuda": false,
+        "vulkan": false
+      }
+    ],
+    "audio": {
+      "microphoneAvailable": true,
+      "microphonePermission": "granted",
+      "systemAudioAvailable": true,
+      "systemAudioPermission": "unknown",
+      "systemAudioUnavailableReason": null,
+      "inputDevices": [
+        {
+          "id": "fixture:mic",
+          "name": "Built-in Microphone",
+          "isDefault": true,
+          "channels": 1,
+          "sampleRate": 48000
+        }
+      ],
+      "outputDevice": {
+        "id": "fixture:out",
+        "name": "Speakers",
+        "isDefault": true,
+        "channels": 2,
+        "sampleRate": 48000
+      }
+    }
+  },
+  "benchmark": null,
+  "expected": {
+    "profile": "full",
+    "llmModelId": "nemotron-3-nano-30b-a3b-q4km",
+    "profileAfterBenchmark": null,
+    "llmModelIdAfterBenchmark": null
+  }
+}

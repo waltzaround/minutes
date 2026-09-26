@@ -1,0 +1,76 @@
+{
+  "id": "mac-m4max-48gb",
+  "description": "48 GB M4 Max MacBook Pro",
+  "hardware": {
+    "os": "macos",
+    "osVersion": "macOS 15.6",
+    "osVersionParts": [
+      15,
+      6,
+      0
+    ],
+    "osBuild": null,
+    "architecture": "aarch64",
+    "cpu": {
+      "model": "Apple M4 Max",
+      "physicalCores": 16,
+      "logicalCores": 16,
+      "avx2": null,
+      "avx512": null,
+      "appleSiliconGeneration": 4,
+      "appleSiliconVariant": "Max"
+    },
+    "memory": {
+      "totalBytes": 51539607552,
+      "availableBytes": 32212254720,
+      "pressure": "low"
+    },
+    "disk": {
+      "availableBytes": 128849018880,
+      "totalBytes": 536870912000,
+      "mountPoint": "/"
+    },
+    "gpus": [
+      {
+        "vendor": "Apple",
+        "model": "Apple M4 Max",
+        "vramBytes": 40200896512,
+        "unifiedMemory": true,
+        "integrated": true,
+        "metal": true,
+        "cuda": false,
+        "vulkan": false
+      }
+    ],
+    "audio": {
+      "microphoneAvailable": true,
+      "microphonePermission": "granted",
+      "systemAudioAvailable": true,
+      "systemAudioPermission": "unknown",
+      "systemAudioUnavailableReason": null,
+      "inputDevices": [
+        {
+          "id": "fixture:mic",
+          "name": "Built-in Microphone",
+          "isDefault": true,
+          "channels": 1,
+          "sampleRate": 48000
+        }
+      ],
+      "outputDevice": {
+        "id": "fixture:out",
+        "name": "Speakers",
+        "isDefault": true,
+        "channels": 2,
+        "sampleRate": 48000
+      }
+    }
+  },
+  "benchmark": null,
+  "expected": {
+    "profile": "full",
+    "llmModelId": "nemotron-3-nano-30b-a3b-q4km",
+    "profileAfterBenchmark": null,
+    "llmModelIdAfterBenchmark": null
+  }
+}

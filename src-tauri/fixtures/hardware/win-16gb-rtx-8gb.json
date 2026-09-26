@@ -1,0 +1,86 @@
+{
+  "id": "win-16gb-rtx-8gb",
+  "description": "16 GB Windows laptop with 8 GB NVIDIA GPU (RTX 4060 Laptop)",
+  "hardware": {
+    "os": "windows",
+    "osVersion": "Windows 11 (26100)",
+    "osVersionParts": [
+      10,
+      0,
+      26100
+    ],
+    "osBuild": 26100,
+    "architecture": "x86_64",
+    "cpu": {
+      "model": "12th Gen Intel(R) Core(TM) i7-12700H",
+      "physicalCores": 14,
+      "logicalCores": 20,
+      "avx2": true,
+      "avx512": false,
+      "appleSiliconGeneration": null,
+      "appleSiliconVariant": null
+    },
+    "memory": {
+      "totalBytes": 17179869184,
+      "availableBytes": 9663676416,
+      "pressure": "low"
+    },
+    "disk": {
+      "availableBytes": 161061273600,
+      "totalBytes": 511101108224,
+      "mountPoint": "C:\\"
+    },
+    "gpus": [
+      {
+        "vendor": "Intel",
+        "model": "Intel(R) Iris(R) Xe Graphics",
+        "vramBytes": 134217728,
+        "unifiedMemory": false,
+        "integrated": true,
+        "metal": false,
+        "cuda": false,
+        "vulkan": true
+      },
+      {
+        "vendor": "NVIDIA",
+        "model": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "vramBytes": 8589934592,
+        "unifiedMemory": false,
+        "integrated": false,
+        "metal": false,
+        "cuda": true,
+        "vulkan": true
+      }
+    ],
+    "audio": {
+      "microphoneAvailable": true,
+      "microphonePermission": "unknown",
+      "systemAudioAvailable": true,
+      "systemAudioPermission": "notRequired",
+      "systemAudioUnavailableReason": null,
+      "inputDevices": [
+        {
+          "id": "fixture:mic",
+          "name": "Built-in Microphone",
+          "isDefault": true,
+          "channels": 1,
+          "sampleRate": 48000
+        }
+      ],
+      "outputDevice": {
+        "id": "fixture:out",
+        "name": "Speakers",
+        "isDefault": true,
+        "channels": 2,
+        "sampleRate": 48000
+      }
+    }
+  },
+  "benchmark": null,
+  "expected": {
+    "profile": "enhanced",
+    "llmModelId": "nemotron-3-nano-4b-q4km",
+    "profileAfterBenchmark": null,
+    "llmModelIdAfterBenchmark": null
+  }
+}

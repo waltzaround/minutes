@@ -1,0 +1,1775 @@
+{
+  "capabilities": {
+    "mac-24gb": {
+      "assessment": {
+        "accelerationCap": "full",
+        "adjustments": [],
+        "basis": "hardwareOnly",
+        "budget": {
+          "appOverheadBytes": 629145600,
+          "discreteVramUsableBytes": 0,
+          "gpuWorkingSetBytes": 17179869184,
+          "liveBytes": 13958643712,
+          "meetingAppAllowanceBytes": 1610612736,
+          "osReserveBytes": 5153960755,
+          "planningBytes": 18376084685,
+          "pressure": "low",
+          "totalBytes": 25769803776,
+          "unifiedMemory": true
+        },
+        "canContinue": true,
+        "headline": "ready",
+        "inference": {
+          "asrSupported": true,
+          "diarizationSupported": true,
+          "largeLlmSupported": false,
+          "llmBackend": "metal",
+          "recommendedProfile": "enhanced",
+          "smallLlmSupported": true
+        },
+        "memoryCeiling": "enhanced",
+        "notes": [],
+        "profile": "enhanced",
+        "ratings": {
+          "estimated": true,
+          "meetingSummaries": "good",
+          "speakerRecognition": "excellent",
+          "transcription": "excellent"
+        },
+        "requiredModels": [
+          "silero-vad",
+          "parakeet-tdt-0.6b-v3-int8",
+          "nemotron-3-diarization",
+          "speaker-embedding",
+          "nemotron-3-nano-4b-q4km"
+        ],
+        "requirements": {
+          "checks": [
+            {
+              "detail": "macOS 15.6 is supported.",
+              "id": "os",
+              "label": "Operating system",
+              "status": "pass"
+            },
+            {
+              "detail": "Apple Silicon.",
+              "id": "architecture",
+              "label": "Processor",
+              "status": "pass"
+            },
+            {
+              "detail": "24 GB of memory.",
+              "id": "memory",
+              "label": "Memory",
+              "status": "pass"
+            },
+            {
+              "detail": "120 GB free.",
+              "id": "disk",
+              "label": "Free disk space",
+              "status": "pass"
+            },
+            {
+              "detail": "A microphone is available.",
+              "id": "microphone",
+              "label": "Microphone",
+              "status": "pass"
+            },
+            {
+              "detail": "Meeting audio can be captured.",
+              "id": "system_audio",
+              "label": "Meeting audio",
+              "status": "pass"
+            }
+          ],
+          "level": "supported",
+          "meetsOfficialMinimum": true
+        },
+        "settings": {
+          "asrThreads": 4,
+          "contextTokens": 32768,
+          "diarization": true,
+          "diarizationThreads": 4,
+          "keepLlmResident": true,
+          "llmFit": {
+            "contextTokens": 32768,
+            "gpuOffloadFraction": 1.0,
+            "gpuResidentBytes": 0,
+            "headroomBytes": 12279445846,
+            "mode": "concurrent",
+            "requiredBytes": 4288054954
+          },
+          "llmModelId": "nemotron-3-nano-4b-q4km",
+          "realtimeTranscript": true,
+          "sequentialLoading": false
+        }
+      },
+      "benchmarks": {
+        "asr": null,
+        "llm": [],
+        "synthetic": null
+      },
+      "detectedAt": "2026-09-26T08:49:08.473Z",
+      "hardware": {
+        "architecture": "aarch64",
+        "audio": {
+          "inputDevices": [
+            {
+              "channels": 1,
+              "id": "fixture:mic",
+              "isDefault": true,
+              "name": "Built-in Microphone",
+              "sampleRate": 48000
+            }
+          ],
+          "microphoneAvailable": true,
+          "microphonePermission": "granted",
+          "outputDevice": {
+            "channels": 2,
+            "id": "fixture:out",
+            "isDefault": true,
+            "name": "Speakers",
+            "sampleRate": 48000
+          },
+          "systemAudioAvailable": true,
+          "systemAudioPermission": "unknown",
+          "systemAudioUnavailableReason": null
+        },
+        "cpu": {
+          "appleSiliconGeneration": 3,
+          "appleSiliconVariant": null,
+          "avx2": null,
+          "avx512": null,
+          "logicalCores": 8,
+          "model": "Apple M3",
+          "physicalCores": 8
+        },
+        "disk": {
+          "availableBytes": 128849018880,
+          "mountPoint": "/",
+          "totalBytes": 536870912000
+        },
+        "gpus": [
+          {
+            "cuda": false,
+            "integrated": true,
+            "metal": true,
+            "model": "Apple M3",
+            "unifiedMemory": true,
+            "vendor": "Apple",
+            "vramBytes": 17179869184,
+            "vulkan": false
+          }
+        ],
+        "memory": {
+          "availableBytes": 15032385536,
+          "pressure": "low",
+          "totalBytes": 25769803776
+        },
+        "os": "macos",
+        "osBuild": null,
+        "osVersion": "macOS 15.6",
+        "osVersionParts": [
+          15,
+          6,
+          0
+        ]
+      },
+      "simulatedFixture": "mac-24gb"
+    },
+    "mac-32gb": {
+      "assessment": {
+        "accelerationCap": "full",
+        "adjustments": [],
+        "basis": "hardwareOnly",
+        "budget": {
+          "appOverheadBytes": 629145600,
+          "discreteVramUsableBytes": 0,
+          "gpuWorkingSetBytes": 22906503168,
+          "liveBytes": 20401094656,
+          "meetingAppAllowanceBytes": 1610612736,
+          "osReserveBytes": 6442450944,
+          "planningBytes": 25677529088,
+          "pressure": "low",
+          "totalBytes": 34359738368,
+          "unifiedMemory": true
+        },
+        "canContinue": true,
+        "headline": "ready",
+        "inference": {
+          "asrSupported": true,
+          "diarizationSupported": true,
+          "largeLlmSupported": true,
+          "llmBackend": "metal",
+          "recommendedProfile": "full",
+          "smallLlmSupported": true
+        },
+        "memoryCeiling": "full",
+        "notes": [],
+        "profile": "full",
+        "ratings": {
+          "estimated": true,
+          "meetingSummaries": "excellent",
+          "speakerRecognition": "excellent",
+          "transcription": "excellent"
+        },
+        "requiredModels": [
+          "silero-vad",
+          "parakeet-tdt-0.6b-v3-int8",
+          "nemotron-3-diarization",
+          "speaker-embedding",
+          "nemotron-3-nano-30b-a3b-q4km"
+        ],
+        "requirements": {
+          "checks": [
+            {
+              "detail": "macOS 15.6 is supported.",
+              "id": "os",
+              "label": "Operating system",
+              "status": "pass"
+            },
+            {
+              "detail": "Apple Silicon.",
+              "id": "architecture",
+              "label": "Processor",
+              "status": "pass"
+            },
+            {
+              "detail": "32 GB of memory.",
+              "id": "memory",
+              "label": "Memory",
+              "status": "pass"
+            },
+            {
+              "detail": "120 GB free.",
+              "id": "disk",
+              "label": "Free disk space",
+              "status": "pass"
+            },
+            {
+              "detail": "A microphone is available.",
+              "id": "microphone",
+              "label": "Microphone",
+              "status": "pass"
+            },
+            {
+              "detail": "Meeting audio can be captured.",
+              "id": "system_audio",
+              "label": "Meeting audio",
+              "status": "pass"
+            }
+          ],
+          "level": "supported",
+          "meetsOfficialMinimum": true
+        },
+        "settings": {
+          "asrThreads": 4,
+          "contextTokens": 32768,
+          "diarization": true,
+          "diarizationThreads": 4,
+          "keepLlmResident": false,
+          "llmFit": {
+            "contextTokens": 32768,
+            "gpuOffloadFraction": 0.897189736366272,
+            "gpuResidentBytes": 0,
+            "headroomBytes": 146136783,
+            "mode": "sequential",
+            "requiredBytes": 25531392305
+          },
+          "llmModelId": "nemotron-3-nano-30b-a3b-q4km",
+          "realtimeTranscript": true,
+          "sequentialLoading": true
+        }
+      },
+      "benchmarks": {
+        "asr": null,
+        "llm": [],
+        "synthetic": null
+      },
+      "detectedAt": "2026-09-26T08:49:08.473Z",
+      "hardware": {
+        "architecture": "aarch64",
+        "audio": {
+          "inputDevices": [
+            {
+              "channels": 1,
+              "id": "fixture:mic",
+              "isDefault": true,
+              "name": "Built-in Microphone",
+              "sampleRate": 48000
+            }
+          ],
+          "microphoneAvailable": true,
+          "microphonePermission": "granted",
+          "outputDevice": {
+            "channels": 2,
+            "id": "fixture:out",
+            "isDefault": true,
+            "name": "Speakers",
+            "sampleRate": 48000
+          },
+          "systemAudioAvailable": true,
+          "systemAudioPermission": "unknown",
+          "systemAudioUnavailableReason": null
+        },
+        "cpu": {
+          "appleSiliconGeneration": 2,
+          "appleSiliconVariant": "Pro",
+          "avx2": null,
+          "avx512": null,
+          "logicalCores": 12,
+          "model": "Apple M2 Pro",
+          "physicalCores": 12
+        },
+        "disk": {
+          "availableBytes": 128849018880,
+          "mountPoint": "/",
+          "totalBytes": 536870912000
+        },
+        "gpus": [
+          {
+            "cuda": false,
+            "integrated": true,
+            "metal": true,
+            "model": "Apple M2 Pro",
+            "unifiedMemory": true,
+            "vendor": "Apple",
+            "vramBytes": 22906503168,
+            "vulkan": false
+          }
+        ],
+        "memory": {
+          "availableBytes": 21474836480,
+          "pressure": "low",
+          "totalBytes": 34359738368
+        },
+        "os": "macos",
+        "osBuild": null,
+        "osVersion": "macOS 15.6",
+        "osVersionParts": [
+          15,
+          6,
+          0
+        ]
+      },
+      "simulatedFixture": "mac-32gb"
+    },
+    "mac-m1-16gb": {
+      "assessment": {
+        "accelerationCap": "full",
+        "adjustments": [],
+        "basis": "hardwareOnly",
+        "budget": {
+          "appOverheadBytes": 629145600,
+          "discreteVramUsableBytes": 0,
+          "gpuWorkingSetBytes": 11456825262,
+          "liveBytes": 8589934592,
+          "meetingAppAllowanceBytes": 1610612736,
+          "osReserveBytes": 3435973836,
+          "planningBytes": 11504137012,
+          "pressure": "low",
+          "totalBytes": 17179869184,
+          "unifiedMemory": true
+        },
+        "canContinue": true,
+        "headline": "compatible",
+        "inference": {
+          "asrSupported": true,
+          "diarizationSupported": true,
+          "largeLlmSupported": false,
+          "llmBackend": "metal",
+          "recommendedProfile": "standard",
+          "smallLlmSupported": true
+        },
+        "memoryCeiling": "standard",
+        "notes": [],
+        "profile": "standard",
+        "ratings": {
+          "estimated": true,
+          "meetingSummaries": "standard",
+          "speakerRecognition": "good",
+          "transcription": "good"
+        },
+        "requiredModels": [
+          "silero-vad",
+          "parakeet-tdt-0.6b-v3-int8",
+          "nemotron-3-diarization",
+          "speaker-embedding",
+          "nemotron-3-nano-4b-q4km"
+        ],
+        "requirements": {
+          "checks": [
+            {
+              "detail": "macOS 15.6 is supported.",
+              "id": "os",
+              "label": "Operating system",
+              "status": "pass"
+            },
+            {
+              "detail": "Apple Silicon.",
+              "id": "architecture",
+              "label": "Processor",
+              "status": "pass"
+            },
+            {
+              "detail": "16 GB of memory.",
+              "id": "memory",
+              "label": "Memory",
+              "status": "pass"
+            },
+            {
+              "detail": "120 GB free.",
+              "id": "disk",
+              "label": "Free disk space",
+              "status": "pass"
+            },
+            {
+              "detail": "A microphone is available.",
+              "id": "microphone",
+              "label": "Microphone",
+              "status": "pass"
+            },
+            {
+              "detail": "Meeting audio can be captured.",
+              "id": "system_audio",
+              "label": "Meeting audio",
+              "status": "pass"
+            }
+          ],
+          "level": "supported",
+          "meetsOfficialMinimum": true
+        },
+        "settings": {
+          "asrThreads": 4,
+          "contextTokens": 16384,
+          "diarization": true,
+          "diarizationThreads": 2,
+          "keepLlmResident": false,
+          "llmFit": {
+            "contextTokens": 16384,
+            "gpuOffloadFraction": 1.0,
+            "gpuResidentBytes": 0,
+            "headroomBytes": 5702777174,
+            "mode": "concurrent",
+            "requiredBytes": 3992775953
+          },
+          "llmModelId": "nemotron-3-nano-4b-q4km",
+          "realtimeTranscript": true,
+          "sequentialLoading": false
+        }
+      },
+      "benchmarks": {
+        "asr": null,
+        "llm": [],
+        "synthetic": null
+      },
+      "detectedAt": "2026-09-26T08:49:08.472Z",
+      "hardware": {
+        "architecture": "aarch64",
+        "audio": {
+          "inputDevices": [
+            {
+              "channels": 1,
+              "id": "fixture:mic",
+              "isDefault": true,
+              "name": "Built-in Microphone",
+              "sampleRate": 48000
+            }
+          ],
+          "microphoneAvailable": true,
+          "microphonePermission": "granted",
+          "outputDevice": {
+            "channels": 2,
+            "id": "fixture:out",
+            "isDefault": true,
+            "name": "Speakers",
+            "sampleRate": 48000
+          },
+          "systemAudioAvailable": true,
+          "systemAudioPermission": "unknown",
+          "systemAudioUnavailableReason": null
+        },
+        "cpu": {
+          "appleSiliconGeneration": 1,
+          "appleSiliconVariant": null,
+          "avx2": null,
+          "avx512": null,
+          "logicalCores": 8,
+          "model": "Apple M1",
+          "physicalCores": 8
+        },
+        "disk": {
+          "availableBytes": 128849018880,
+          "mountPoint": "/",
+          "totalBytes": 536870912000
+        },
+        "gpus": [
+          {
+            "cuda": false,
+            "integrated": true,
+            "metal": true,
+            "model": "Apple M1",
+            "unifiedMemory": true,
+            "vendor": "Apple",
+            "vramBytes": 11456825262,
+            "vulkan": false
+          }
+        ],
+        "memory": {
+          "availableBytes": 9663676416,
+          "pressure": "low",
+          "totalBytes": 17179869184
+        },
+        "os": "macos",
+        "osBuild": null,
+        "osVersion": "macOS 15.6",
+        "osVersionParts": [
+          15,
+          6,
+          0
+        ]
+      },
+      "simulatedFixture": "mac-m1-16gb"
+    },
+    "mac-m4max-48gb": {
+      "assessment": {
+        "accelerationCap": "full",
+        "adjustments": [],
+        "basis": "hardwareOnly",
+        "budget": {
+          "appOverheadBytes": 629145600,
+          "discreteVramUsableBytes": 0,
+          "gpuWorkingSetBytes": 40200896512,
+          "liveBytes": 31138512896,
+          "meetingAppAllowanceBytes": 1610612736,
+          "osReserveBytes": 6442450944,
+          "planningBytes": 42857398272,
+          "pressure": "low",
+          "totalBytes": 51539607552,
+          "unifiedMemory": true
+        },
+        "canContinue": true,
+        "headline": "ready",
+        "inference": {
+          "asrSupported": true,
+          "diarizationSupported": true,
+          "largeLlmSupported": true,
+          "llmBackend": "metal",
+          "recommendedProfile": "full",
+          "smallLlmSupported": true
+        },
+        "memoryCeiling": "full",
+        "notes": [],
+        "profile": "full",
+        "ratings": {
+          "estimated": true,
+          "meetingSummaries": "excellent",
+          "speakerRecognition": "excellent",
+          "transcription": "excellent"
+        },
+        "requiredModels": [
+          "silero-vad",
+          "parakeet-tdt-0.6b-v3-int8",
+          "nemotron-3-diarization",
+          "speaker-embedding",
+          "nemotron-3-nano-30b-a3b-q4km"
+        ],
+        "requirements": {
+          "checks": [
+            {
+              "detail": "macOS 15.6 is supported.",
+              "id": "os",
+              "label": "Operating system",
+              "status": "pass"
+            },
+            {
+              "detail": "Apple Silicon.",
+              "id": "architecture",
+              "label": "Processor",
+              "status": "pass"
+            },
+            {
+              "detail": "48 GB of memory.",
+              "id": "memory",
+              "label": "Memory",
+              "status": "pass"
+            },
+            {
+              "detail": "120 GB free.",
+              "id": "disk",
+              "label": "Free disk space",
+              "status": "pass"
+            },
+            {
+              "detail": "A microphone is available.",
+              "id": "microphone",
+              "label": "Microphone",
+              "status": "pass"
+            },
+            {
+              "detail": "Meeting audio can be captured.",
+              "id": "system_audio",
+              "label": "Meeting audio",
+              "status": "pass"
+            }
+          ],
+          "level": "supported",
+          "meetsOfficialMinimum": true
+        },
+        "settings": {
+          "asrThreads": 4,
+          "contextTokens": 32768,
+          "diarization": true,
+          "diarizationThreads": 4,
+          "keepLlmResident": true,
+          "llmFit": {
+            "contextTokens": 32768,
+            "gpuOffloadFraction": 1.0,
+            "gpuResidentBytes": 0,
+            "headroomBytes": 15517422082,
+            "mode": "concurrent",
+            "requiredBytes": 25531392305
+          },
+          "llmModelId": "nemotron-3-nano-30b-a3b-q4km",
+          "realtimeTranscript": true,
+          "sequentialLoading": false
+        }
+      },
+      "benchmarks": {
+        "asr": null,
+        "llm": [],
+        "synthetic": null
+      },
+      "detectedAt": "2026-09-26T08:49:08.473Z",
+      "hardware": {
+        "architecture": "aarch64",
+        "audio": {
+          "inputDevices": [
+            {
+              "channels": 1,
+              "id": "fixture:mic",
+              "isDefault": true,
+              "name": "Built-in Microphone",
+              "sampleRate": 48000
+            }
+          ],
+          "microphoneAvailable": true,
+          "microphonePermission": "granted",
+          "outputDevice": {
+            "channels": 2,
+            "id": "fixture:out",
+            "isDefault": true,
+            "name": "Speakers",
+            "sampleRate": 48000
+          },
+          "systemAudioAvailable": true,
+          "systemAudioPermission": "unknown",
+          "systemAudioUnavailableReason": null
+        },
+        "cpu": {
+          "appleSiliconGeneration": 4,
+          "appleSiliconVariant": "Max",
+          "avx2": null,
+          "avx512": null,
+          "logicalCores": 16,
+          "model": "Apple M4 Max",
+          "physicalCores": 16
+        },
+        "disk": {
+          "availableBytes": 128849018880,
+          "mountPoint": "/",
+          "totalBytes": 536870912000
+        },
+        "gpus": [
+          {
+            "cuda": false,
+            "integrated": true,
+            "metal": true,
+            "model": "Apple M4 Max",
+            "unifiedMemory": true,
+            "vendor": "Apple",
+            "vramBytes": 40200896512,
+            "vulkan": false
+          }
+        ],
+        "memory": {
+          "availableBytes": 32212254720,
+          "pressure": "low",
+          "totalBytes": 51539607552
+        },
+        "os": "macos",
+        "osBuild": null,
+        "osVersion": "macOS 15.6",
+        "osVersionParts": [
+          15,
+          6,
+          0
+        ]
+      },
+      "simulatedFixture": "mac-m4max-48gb"
+    },
+    "win-16gb-rtx-8gb": {
+      "assessment": {
+        "accelerationCap": "full",
+        "adjustments": [],
+        "basis": "hardwareOnly",
+        "budget": {
+          "appOverheadBytes": 629145600,
+          "discreteVramUsableBytes": 7784628224,
+          "gpuWorkingSetBytes": null,
+          "liveBytes": 8589934592,
+          "meetingAppAllowanceBytes": 1610612736,
+          "osReserveBytes": 3435973836,
+          "planningBytes": 11504137012,
+          "pressure": "low",
+          "totalBytes": 17179869184,
+          "unifiedMemory": false
+        },
+        "canContinue": true,
+        "headline": "ready",
+        "inference": {
+          "asrSupported": true,
+          "diarizationSupported": true,
+          "largeLlmSupported": false,
+          "llmBackend": "cuda",
+          "recommendedProfile": "enhanced",
+          "smallLlmSupported": true
+        },
+        "memoryCeiling": "enhanced",
+        "notes": [],
+        "profile": "enhanced",
+        "ratings": {
+          "estimated": true,
+          "meetingSummaries": "good",
+          "speakerRecognition": "excellent",
+          "transcription": "excellent"
+        },
+        "requiredModels": [
+          "silero-vad",
+          "parakeet-tdt-0.6b-v3-int8",
+          "nemotron-3-diarization",
+          "speaker-embedding",
+          "nemotron-3-nano-4b-q4km"
+        ],
+        "requirements": {
+          "checks": [
+            {
+              "detail": "Windows 11 (26100) is supported.",
+              "id": "os",
+              "label": "Operating system",
+              "status": "pass"
+            },
+            {
+              "detail": "Enough processor cores.",
+              "id": "cpu",
+              "label": "Processor cores",
+              "status": "pass"
+            },
+            {
+              "detail": "16 GB of memory.",
+              "id": "memory",
+              "label": "Memory",
+              "status": "pass"
+            },
+            {
+              "detail": "150 GB free.",
+              "id": "disk",
+              "label": "Free disk space",
+              "status": "pass"
+            },
+            {
+              "detail": "A microphone is available.",
+              "id": "microphone",
+              "label": "Microphone",
+              "status": "pass"
+            },
+            {
+              "detail": "Meeting audio can be captured.",
+              "id": "system_audio",
+              "label": "Meeting audio",
+              "status": "pass"
+            }
+          ],
+          "level": "supported",
+          "meetsOfficialMinimum": true
+        },
+        "settings": {
+          "asrThreads": 4,
+          "contextTokens": 32768,
+          "diarization": true,
+          "diarizationThreads": 4,
+          "keepLlmResident": true,
+          "llmFit": {
+            "contextTokens": 32768,
+            "gpuOffloadFraction": 1.0,
+            "gpuResidentBytes": 4288054954,
+            "headroomBytes": 9695553127,
+            "mode": "concurrent",
+            "requiredBytes": 4288054954
+          },
+          "llmModelId": "nemotron-3-nano-4b-q4km",
+          "realtimeTranscript": true,
+          "sequentialLoading": false
+        }
+      },
+      "benchmarks": {
+        "asr": null,
+        "llm": [],
+        "synthetic": null
+      },
+      "detectedAt": "2026-09-26T08:49:08.472Z",
+      "hardware": {
+        "architecture": "x86_64",
+        "audio": {
+          "inputDevices": [
+            {
+              "channels": 1,
+              "id": "fixture:mic",
+              "isDefault": true,
+              "name": "Built-in Microphone",
+              "sampleRate": 48000
+            }
+          ],
+          "microphoneAvailable": true,
+          "microphonePermission": "unknown",
+          "outputDevice": {
+            "channels": 2,
+            "id": "fixture:out",
+            "isDefault": true,
+            "name": "Speakers",
+            "sampleRate": 48000
+          },
+          "systemAudioAvailable": true,
+          "systemAudioPermission": "notRequired",
+          "systemAudioUnavailableReason": null
+        },
+        "cpu": {
+          "appleSiliconGeneration": null,
+          "appleSiliconVariant": null,
+          "avx2": true,
+          "avx512": false,
+          "logicalCores": 20,
+          "model": "12th Gen Intel(R) Core(TM) i7-12700H",
+          "physicalCores": 14
+        },
+        "disk": {
+          "availableBytes": 161061273600,
+          "mountPoint": "C:\\",
+          "totalBytes": 511101108224
+        },
+        "gpus": [
+          {
+            "cuda": false,
+            "integrated": true,
+            "metal": false,
+            "model": "Intel(R) Iris(R) Xe Graphics",
+            "unifiedMemory": false,
+            "vendor": "Intel",
+            "vramBytes": 134217728,
+            "vulkan": true
+          },
+          {
+            "cuda": true,
+            "integrated": false,
+            "metal": false,
+            "model": "NVIDIA GeForce RTX 4060 Laptop GPU",
+            "unifiedMemory": false,
+            "vendor": "NVIDIA",
+            "vramBytes": 8589934592,
+            "vulkan": true
+          }
+        ],
+        "memory": {
+          "availableBytes": 9663676416,
+          "pressure": "low",
+          "totalBytes": 17179869184
+        },
+        "os": "windows",
+        "osBuild": 26100,
+        "osVersion": "Windows 11 (26100)",
+        "osVersionParts": [
+          10,
+          0,
+          26100
+        ]
+      },
+      "simulatedFixture": "win-16gb-rtx-8gb"
+    },
+    "win-32gb-cpu-only": {
+      "assessment": {
+        "accelerationCap": "enhanced",
+        "adjustments": [
+          {
+            "from": "enhanced",
+            "reason": "Local AI ran at 22 tokens/s, faster than the hardware alone suggested.",
+            "to": "full"
+          }
+        ],
+        "basis": "benchmarked",
+        "budget": {
+          "appOverheadBytes": 629145600,
+          "discreteVramUsableBytes": 0,
+          "gpuWorkingSetBytes": null,
+          "liveBytes": 22548578304,
+          "meetingAppAllowanceBytes": 1610612736,
+          "osReserveBytes": 6442450944,
+          "planningBytes": 25677529088,
+          "pressure": "low",
+          "totalBytes": 34359738368,
+          "unifiedMemory": false
+        },
+        "canContinue": true,
+        "headline": "ready",
+        "inference": {
+          "asrSupported": true,
+          "diarizationSupported": true,
+          "largeLlmSupported": true,
+          "llmBackend": "cpu",
+          "recommendedProfile": "full",
+          "smallLlmSupported": true
+        },
+        "memoryCeiling": "full",
+        "notes": [],
+        "profile": "full",
+        "ratings": {
+          "estimated": false,
+          "meetingSummaries": "excellent",
+          "speakerRecognition": "good",
+          "transcription": "good"
+        },
+        "requiredModels": [
+          "silero-vad",
+          "parakeet-tdt-0.6b-v3-int8",
+          "nemotron-3-diarization",
+          "speaker-embedding",
+          "nemotron-3-nano-30b-a3b-q4km"
+        ],
+        "requirements": {
+          "checks": [
+            {
+              "detail": "Windows 11 (26100) is supported.",
+              "id": "os",
+              "label": "Operating system",
+              "status": "pass"
+            },
+            {
+              "detail": "Enough processor cores.",
+              "id": "cpu",
+              "label": "Processor cores",
+              "status": "pass"
+            },
+            {
+              "detail": "32 GB of memory.",
+              "id": "memory",
+              "label": "Memory",
+              "status": "pass"
+            },
+            {
+              "detail": "150 GB free.",
+              "id": "disk",
+              "label": "Free disk space",
+              "status": "pass"
+            },
+            {
+              "detail": "A microphone is available.",
+              "id": "microphone",
+              "label": "Microphone",
+              "status": "pass"
+            },
+            {
+              "detail": "Meeting audio can be captured.",
+              "id": "system_audio",
+              "label": "Meeting audio",
+              "status": "pass"
+            }
+          ],
+          "level": "supported",
+          "meetsOfficialMinimum": true
+        },
+        "settings": {
+          "asrThreads": 3,
+          "contextTokens": 32768,
+          "diarization": true,
+          "diarizationThreads": 4,
+          "keepLlmResident": false,
+          "llmFit": {
+            "contextTokens": 32768,
+            "gpuOffloadFraction": 0.0,
+            "gpuResidentBytes": 0,
+            "headroomBytes": 146136783,
+            "mode": "sequential",
+            "requiredBytes": 25531392305
+          },
+          "llmModelId": "nemotron-3-nano-30b-a3b-q4km",
+          "realtimeTranscript": true,
+          "sequentialLoading": true
+        }
+      },
+      "benchmarks": {
+        "asr": {
+          "audioSeconds": 10.0,
+          "error": null,
+          "loadMs": 1400,
+          "modelId": "parakeet-tdt-0.6b-v3-int8",
+          "outputPlausible": true,
+          "peakRssBytes": null,
+          "processMs": 1100,
+          "rtf": 0.11
+        },
+        "llm": [
+          {
+            "backend": "cpu",
+            "contextTokens": 4096,
+            "error": null,
+            "generatedTokens": 128,
+            "generationTokensPerSecond": 22.0,
+            "loadMs": 3000,
+            "modelId": "nemotron-3-nano-4b-q4km",
+            "peakRssBytes": null,
+            "promptTokens": 400,
+            "promptTokensPerSecond": 180.0,
+            "stable": true,
+            "structuredOutputValid": true
+          }
+        ],
+        "synthetic": null
+      },
+      "detectedAt": "2026-09-26T08:49:08.473Z",
+      "hardware": {
+        "architecture": "x86_64",
+        "audio": {
+          "inputDevices": [
+            {
+              "channels": 1,
+              "id": "fixture:mic",
+              "isDefault": true,
+              "name": "Built-in Microphone",
+              "sampleRate": 48000
+            }
+          ],
+          "microphoneAvailable": true,
+          "microphonePermission": "unknown",
+          "outputDevice": {
+            "channels": 2,
+            "id": "fixture:out",
+            "isDefault": true,
+            "name": "Speakers",
+            "sampleRate": 48000
+          },
+          "systemAudioAvailable": true,
+          "systemAudioPermission": "notRequired",
+          "systemAudioUnavailableReason": null
+        },
+        "cpu": {
+          "appleSiliconGeneration": null,
+          "appleSiliconVariant": null,
+          "avx2": true,
+          "avx512": false,
+          "logicalCores": 12,
+          "model": "Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz",
+          "physicalCores": 6
+        },
+        "disk": {
+          "availableBytes": 161061273600,
+          "mountPoint": "C:\\",
+          "totalBytes": 511101108224
+        },
+        "gpus": [
+          {
+            "cuda": false,
+            "integrated": true,
+            "metal": false,
+            "model": "Intel(R) UHD Graphics 630",
+            "unifiedMemory": false,
+            "vendor": "Intel",
+            "vramBytes": 134217728,
+            "vulkan": true
+          }
+        ],
+        "memory": {
+          "availableBytes": 23622320128,
+          "pressure": "low",
+          "totalBytes": 34359738368
+        },
+        "os": "windows",
+        "osBuild": 26100,
+        "osVersion": "Windows 11 (26100)",
+        "osVersionParts": [
+          10,
+          0,
+          26100
+        ]
+      },
+      "simulatedFixture": "win-32gb-cpu-only"
+    },
+    "win-32gb-rtx-12gb": {
+      "assessment": {
+        "accelerationCap": "full",
+        "adjustments": [],
+        "basis": "hardwareOnly",
+        "budget": {
+          "appOverheadBytes": 629145600,
+          "discreteVramUsableBytes": 12079595520,
+          "gpuWorkingSetBytes": null,
+          "liveBytes": 22548578304,
+          "meetingAppAllowanceBytes": 1610612736,
+          "osReserveBytes": 6442450944,
+          "planningBytes": 25677529088,
+          "pressure": "low",
+          "totalBytes": 34359738368,
+          "unifiedMemory": false
+        },
+        "canContinue": true,
+        "headline": "ready",
+        "inference": {
+          "asrSupported": true,
+          "diarizationSupported": true,
+          "largeLlmSupported": true,
+          "llmBackend": "cuda",
+          "recommendedProfile": "full",
+          "smallLlmSupported": true
+        },
+        "memoryCeiling": "full",
+        "notes": [],
+        "profile": "full",
+        "ratings": {
+          "estimated": true,
+          "meetingSummaries": "excellent",
+          "speakerRecognition": "excellent",
+          "transcription": "excellent"
+        },
+        "requiredModels": [
+          "silero-vad",
+          "parakeet-tdt-0.6b-v3-int8",
+          "nemotron-3-diarization",
+          "speaker-embedding",
+          "nemotron-3-nano-30b-a3b-q4km"
+        ],
+        "requirements": {
+          "checks": [
+            {
+              "detail": "Windows 11 (26100) is supported.",
+              "id": "os",
+              "label": "Operating system",
+              "status": "pass"
+            },
+            {
+              "detail": "Enough processor cores.",
+              "id": "cpu",
+              "label": "Processor cores",
+              "status": "pass"
+            },
+            {
+              "detail": "32 GB of memory.",
+              "id": "memory",
+              "label": "Memory",
+              "status": "pass"
+            },
+            {
+              "detail": "150 GB free.",
+              "id": "disk",
+              "label": "Free disk space",
+              "status": "pass"
+            },
+            {
+              "detail": "A microphone is available.",
+              "id": "microphone",
+              "label": "Microphone",
+              "status": "pass"
+            },
+            {
+              "detail": "Meeting audio can be captured.",
+              "id": "system_audio",
+              "label": "Meeting audio",
+              "status": "pass"
+            }
+          ],
+          "level": "supported",
+          "meetsOfficialMinimum": true
+        },
+        "settings": {
+          "asrThreads": 4,
+          "contextTokens": 32768,
+          "diarization": true,
+          "diarizationThreads": 4,
+          "keepLlmResident": true,
+          "llmFit": {
+            "contextTokens": 32768,
+            "gpuOffloadFraction": 0.47312718629837036,
+            "gpuResidentBytes": 12079595520,
+            "headroomBytes": 10417148418,
+            "mode": "concurrent",
+            "requiredBytes": 25531392305
+          },
+          "llmModelId": "nemotron-3-nano-30b-a3b-q4km",
+          "realtimeTranscript": true,
+          "sequentialLoading": false
+        }
+      },
+      "benchmarks": {
+        "asr": null,
+        "llm": [],
+        "synthetic": null
+      },
+      "detectedAt": "2026-09-26T08:49:08.473Z",
+      "hardware": {
+        "architecture": "x86_64",
+        "audio": {
+          "inputDevices": [
+            {
+              "channels": 1,
+              "id": "fixture:mic",
+              "isDefault": true,
+              "name": "Built-in Microphone",
+              "sampleRate": 48000
+            }
+          ],
+          "microphoneAvailable": true,
+          "microphonePermission": "unknown",
+          "outputDevice": {
+            "channels": 2,
+            "id": "fixture:out",
+            "isDefault": true,
+            "name": "Speakers",
+            "sampleRate": 48000
+          },
+          "systemAudioAvailable": true,
+          "systemAudioPermission": "notRequired",
+          "systemAudioUnavailableReason": null
+        },
+        "cpu": {
+          "appleSiliconGeneration": null,
+          "appleSiliconVariant": null,
+          "avx2": true,
+          "avx512": false,
+          "logicalCores": 16,
+          "model": "AMD Ryzen 7 7700 8-Core Processor",
+          "physicalCores": 8
+        },
+        "disk": {
+          "availableBytes": 161061273600,
+          "mountPoint": "C:\\",
+          "totalBytes": 511101108224
+        },
+        "gpus": [
+          {
+            "cuda": true,
+            "integrated": false,
+            "metal": false,
+            "model": "NVIDIA GeForce RTX 4070",
+            "unifiedMemory": false,
+            "vendor": "NVIDIA",
+            "vramBytes": 12884901888,
+            "vulkan": true
+          }
+        ],
+        "memory": {
+          "availableBytes": 23622320128,
+          "pressure": "low",
+          "totalBytes": 34359738368
+        },
+        "os": "windows",
+        "osBuild": 26100,
+        "osVersion": "Windows 11 (26100)",
+        "osVersionParts": [
+          10,
+          0,
+          26100
+        ]
+      },
+      "simulatedFixture": "win-32gb-rtx-12gb"
+    },
+    "win-cpu-16gb": {
+      "assessment": {
+        "accelerationCap": "enhanced",
+        "adjustments": [],
+        "basis": "hardwareOnly",
+        "budget": {
+          "appOverheadBytes": 629145600,
+          "discreteVramUsableBytes": 0,
+          "gpuWorkingSetBytes": null,
+          "liveBytes": 8589934592,
+          "meetingAppAllowanceBytes": 1610612736,
+          "osReserveBytes": 3435973836,
+          "planningBytes": 11504137012,
+          "pressure": "low",
+          "totalBytes": 17179869184,
+          "unifiedMemory": false
+        },
+        "canContinue": true,
+        "headline": "compatible",
+        "inference": {
+          "asrSupported": true,
+          "diarizationSupported": true,
+          "largeLlmSupported": false,
+          "llmBackend": "cpu",
+          "recommendedProfile": "standard",
+          "smallLlmSupported": true
+        },
+        "memoryCeiling": "standard",
+        "notes": [],
+        "profile": "standard",
+        "ratings": {
+          "estimated": true,
+          "meetingSummaries": "standard",
+          "speakerRecognition": "good",
+          "transcription": "good"
+        },
+        "requiredModels": [
+          "silero-vad",
+          "parakeet-tdt-0.6b-v3-int8",
+          "nemotron-3-diarization",
+          "speaker-embedding",
+          "nemotron-3-nano-4b-q4km"
+        ],
+        "requirements": {
+          "checks": [
+            {
+              "detail": "Windows 11 (26100) is supported.",
+              "id": "os",
+              "label": "Operating system",
+              "status": "pass"
+            },
+            {
+              "detail": "Enough processor cores.",
+              "id": "cpu",
+              "label": "Processor cores",
+              "status": "pass"
+            },
+            {
+              "detail": "16 GB of memory.",
+              "id": "memory",
+              "label": "Memory",
+              "status": "pass"
+            },
+            {
+              "detail": "150 GB free.",
+              "id": "disk",
+              "label": "Free disk space",
+              "status": "pass"
+            },
+            {
+              "detail": "A microphone is available.",
+              "id": "microphone",
+              "label": "Microphone",
+              "status": "pass"
+            },
+            {
+              "detail": "Meeting audio can be captured.",
+              "id": "system_audio",
+              "label": "Meeting audio",
+              "status": "pass"
+            }
+          ],
+          "level": "supported",
+          "meetsOfficialMinimum": true
+        },
+        "settings": {
+          "asrThreads": 3,
+          "contextTokens": 16384,
+          "diarization": true,
+          "diarizationThreads": 2,
+          "keepLlmResident": false,
+          "llmFit": {
+            "contextTokens": 16384,
+            "gpuOffloadFraction": 0.0,
+            "gpuResidentBytes": 0,
+            "headroomBytes": 5702777174,
+            "mode": "concurrent",
+            "requiredBytes": 3992775953
+          },
+          "llmModelId": "nemotron-3-nano-4b-q4km",
+          "realtimeTranscript": true,
+          "sequentialLoading": false
+        }
+      },
+      "benchmarks": {
+        "asr": null,
+        "llm": [],
+        "synthetic": null
+      },
+      "detectedAt": "2026-09-26T08:49:08.472Z",
+      "hardware": {
+        "architecture": "x86_64",
+        "audio": {
+          "inputDevices": [
+            {
+              "channels": 1,
+              "id": "fixture:mic",
+              "isDefault": true,
+              "name": "Built-in Microphone",
+              "sampleRate": 48000
+            }
+          ],
+          "microphoneAvailable": true,
+          "microphonePermission": "unknown",
+          "outputDevice": {
+            "channels": 2,
+            "id": "fixture:out",
+            "isDefault": true,
+            "name": "Speakers",
+            "sampleRate": 48000
+          },
+          "systemAudioAvailable": true,
+          "systemAudioPermission": "notRequired",
+          "systemAudioUnavailableReason": null
+        },
+        "cpu": {
+          "appleSiliconGeneration": null,
+          "appleSiliconVariant": null,
+          "avx2": true,
+          "avx512": false,
+          "logicalCores": 12,
+          "model": "AMD Ryzen 5 5500U with Radeon Graphics",
+          "physicalCores": 6
+        },
+        "disk": {
+          "availableBytes": 161061273600,
+          "mountPoint": "C:\\",
+          "totalBytes": 511101108224
+        },
+        "gpus": [
+          {
+            "cuda": false,
+            "integrated": true,
+            "metal": false,
+            "model": "AMD Radeon(TM) Graphics",
+            "unifiedMemory": false,
+            "vendor": "AMD",
+            "vramBytes": 134217728,
+            "vulkan": true
+          }
+        ],
+        "memory": {
+          "availableBytes": 9663676416,
+          "pressure": "low",
+          "totalBytes": 17179869184
+        },
+        "os": "windows",
+        "osBuild": 26100,
+        "osVersion": "Windows 11 (26100)",
+        "osVersionParts": [
+          10,
+          0,
+          26100
+        ]
+      },
+      "simulatedFixture": "win-cpu-16gb"
+    },
+    "win-intel-8gb": {
+      "assessment": {
+        "accelerationCap": "enhanced",
+        "adjustments": [],
+        "basis": "hardwareOnly",
+        "budget": {
+          "appOverheadBytes": 629145600,
+          "discreteVramUsableBytes": 0,
+          "gpuWorkingSetBytes": null,
+          "liveBytes": 3221225472,
+          "meetingAppAllowanceBytes": 1610612736,
+          "osReserveBytes": 2147483648,
+          "planningBytes": 4202692608,
+          "pressure": "low",
+          "totalBytes": 8589934592,
+          "unifiedMemory": false
+        },
+        "canContinue": true,
+        "headline": "limited",
+        "inference": {
+          "asrSupported": true,
+          "diarizationSupported": true,
+          "largeLlmSupported": false,
+          "llmBackend": "cpu",
+          "recommendedProfile": "basic",
+          "smallLlmSupported": true
+        },
+        "memoryCeiling": "basic",
+        "notes": [],
+        "profile": "basic",
+        "ratings": {
+          "estimated": true,
+          "meetingSummaries": "limited",
+          "speakerRecognition": "standard",
+          "transcription": "standard"
+        },
+        "requiredModels": [
+          "silero-vad",
+          "parakeet-tdt-0.6b-v3-int8",
+          "nemotron-3-diarization",
+          "speaker-embedding",
+          "nemotron-3-nano-4b-q4km"
+        ],
+        "requirements": {
+          "checks": [
+            {
+              "detail": "Windows 11 (26100) is supported.",
+              "id": "os",
+              "label": "Operating system",
+              "status": "pass"
+            },
+            {
+              "detail": "Enough processor cores.",
+              "id": "cpu",
+              "label": "Processor cores",
+              "status": "pass"
+            },
+            {
+              "detail": "Your computer has 8 GB of memory. Recording and transcription may work, but local AI summaries can be slower and other applications may affect reliability. 16 GB or more is recommended.",
+              "id": "memory",
+              "label": "Memory",
+              "status": "warn"
+            },
+            {
+              "detail": "150 GB free.",
+              "id": "disk",
+              "label": "Free disk space",
+              "status": "pass"
+            },
+            {
+              "detail": "A microphone is available.",
+              "id": "microphone",
+              "label": "Microphone",
+              "status": "pass"
+            },
+            {
+              "detail": "Meeting audio can be captured.",
+              "id": "system_audio",
+              "label": "Meeting audio",
+              "status": "pass"
+            }
+          ],
+          "level": "limited",
+          "meetsOfficialMinimum": false
+        },
+        "settings": {
+          "asrThreads": 2,
+          "contextTokens": 8192,
+          "diarization": true,
+          "diarizationThreads": 1,
+          "keepLlmResident": false,
+          "llmFit": {
+            "contextTokens": 8192,
+            "gpuOffloadFraction": 0.0,
+            "gpuResidentBytes": 0,
+            "headroomBytes": 357556156,
+            "mode": "sequential",
+            "requiredBytes": 3845136452
+          },
+          "llmModelId": "nemotron-3-nano-4b-q4km",
+          "realtimeTranscript": true,
+          "sequentialLoading": true
+        }
+      },
+      "benchmarks": {
+        "asr": null,
+        "llm": [],
+        "synthetic": null
+      },
+      "detectedAt": "2026-09-26T08:49:08.472Z",
+      "hardware": {
+        "architecture": "x86_64",
+        "audio": {
+          "inputDevices": [
+            {
+              "channels": 1,
+              "id": "fixture:mic",
+              "isDefault": true,
+              "name": "Built-in Microphone",
+              "sampleRate": 48000
+            }
+          ],
+          "microphoneAvailable": true,
+          "microphonePermission": "unknown",
+          "outputDevice": {
+            "channels": 2,
+            "id": "fixture:out",
+            "isDefault": true,
+            "name": "Speakers",
+            "sampleRate": 48000
+          },
+          "systemAudioAvailable": true,
+          "systemAudioPermission": "notRequired",
+          "systemAudioUnavailableReason": null
+        },
+        "cpu": {
+          "appleSiliconGeneration": null,
+          "appleSiliconVariant": null,
+          "avx2": true,
+          "avx512": false,
+          "logicalCores": 8,
+          "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
+          "physicalCores": 4
+        },
+        "disk": {
+          "availableBytes": 161061273600,
+          "mountPoint": "C:\\",
+          "totalBytes": 511101108224
+        },
+        "gpus": [
+          {
+            "cuda": false,
+            "integrated": true,
+            "metal": false,
+            "model": "Intel(R) UHD Graphics 620",
+            "unifiedMemory": false,
+            "vendor": "Intel",
+            "vramBytes": 134217728,
+            "vulkan": true
+          }
+        ],
+        "memory": {
+          "availableBytes": 4294967296,
+          "pressure": "low",
+          "totalBytes": 8589934592
+        },
+        "os": "windows",
+        "osBuild": 26100,
+        "osVersion": "Windows 11 (26100)",
+        "osVersionParts": [
+          10,
+          0,
+          26100
+        ]
+      },
+      "simulatedFixture": "win-intel-8gb"
+    }
+  },
+  "manifests": [
+    {
+      "byteSize": 643854,
+      "files": [
+        {
+          "byteSize": 643854,
+          "downloadUrl": "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/silero_vad.onnx",
+          "path": "silero_vad.onnx",
+          "sha256": "9e2449e1087496d8d4caba907f23e0bd3f78d91fa552479bb9c23ac09cbb1fd6"
+        }
+      ],
+      "id": "silero-vad",
+      "license": "MIT",
+      "licenseUrl": "https://github.com/snakers4/silero-vad/blob/master/LICENSE",
+      "minimumCapabilities": null,
+      "name": "Silero VAD",
+      "purpose": "vad",
+      "version": "v5"
+    },
+    {
+      "byteSize": 670663380,
+      "files": [
+        {
+          "byteSize": 652184281,
+          "downloadUrl": "https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8/resolve/main/encoder.int8.onnx",
+          "path": "encoder.int8.onnx",
+          "sha256": "acfc2b4456377e15d04f0243af540b7fe7c992f8d898d751cf134c3a55fd2247"
+        },
+        {
+          "byteSize": 11845275,
+          "downloadUrl": "https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8/resolve/main/decoder.int8.onnx",
+          "path": "decoder.int8.onnx",
+          "sha256": "179e50c43d1a9de79c8a24149a2f9bac6eb5981823f2a2ed88d655b24248db4e"
+        },
+        {
+          "byteSize": 6355277,
+          "downloadUrl": "https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8/resolve/main/joiner.int8.onnx",
+          "path": "joiner.int8.onnx",
+          "sha256": "3164c13fc2821009440d20fcb5fdc78bff28b4db2f8d0f0b329101719c0948b3"
+        },
+        {
+          "byteSize": 93939,
+          "downloadUrl": "https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8/resolve/main/tokens.txt",
+          "path": "tokens.txt",
+          "sha256": "d58544679ea4bc6ac563d1f545eb7d474bd6cfa467f0a6e2c1dc1c7d37e3c35d"
+        },
+        {
+          "byteSize": 184608,
+          "downloadUrl": "https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8/resolve/main/test_wavs/en.wav",
+          "path": "test_wavs/en.wav",
+          "sha256": "148b936b43ce7c546a866e64da059f0458aee2d65e617f16e9d94f06e8d99ed6"
+        }
+      ],
+      "id": "parakeet-tdt-0.6b-v3-int8",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3",
+      "minimumCapabilities": null,
+      "name": "Parakeet TDT 0.6B v3",
+      "purpose": "asr",
+      "version": "v3-int8"
+    },
+    {
+      "byteSize": 107012128,
+      "files": [
+        {
+          "byteSize": 107012128,
+          "downloadUrl": "https://huggingface.co/nvidia/Nemotron-3-Diarization/resolve/main/Nemotron-3-Diarization.q8_0.gguf",
+          "path": "Nemotron-3-Diarization.q8_0.gguf",
+          "sha256": "08456d9e22cd9a323c0364d98375f3746d6e68507ebb705cd46438c534c7a3a1"
+        }
+      ],
+      "id": "nemotron-3-diarization",
+      "license": "OpenMDW-1.1",
+      "licenseUrl": "https://openmdw.ai/license/1-1/",
+      "minimumCapabilities": null,
+      "name": "Nemotron 3 Diarization",
+      "purpose": "diarization",
+      "version": "q8_0"
+    },
+    {
+      "byteSize": 40257283,
+      "files": [
+        {
+          "byteSize": 40257283,
+          "downloadUrl": "https://huggingface.co/csukuangfj/speaker-embedding-models/resolve/main/nemo_en_titanet_small.onnx",
+          "path": "nemo_en_titanet_small.onnx",
+          "sha256": "ad4a1802485d8b34c722d2a9d04249662f2ece5d28a7a039063ca22f515a789e"
+        }
+      ],
+      "id": "speaker-embedding",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://huggingface.co/nvidia/speakerverification_en_titanet_large",
+      "minimumCapabilities": null,
+      "name": "TitaNet Small (speaker embeddings)",
+      "purpose": "embedding",
+      "version": "titanet-small"
+    },
+    {
+      "byteSize": 2837072864,
+      "files": [
+        {
+          "byteSize": 2837072864,
+          "downloadUrl": "https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-4B-GGUF/resolve/main/NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf",
+          "path": "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf",
+          "sha256": "be5d9a656a51922f24f1f09a759cebb694e1f5d9728bf0ef9f8c972c5a0b5ef2"
+        }
+      ],
+      "id": "nemotron-3-nano-4b-q4km",
+      "license": "NVIDIA Nemotron Open Model License",
+      "licenseUrl": "https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-nemotron-open-model-license/",
+      "minimumCapabilities": {
+        "minimumProfile": "basic"
+      },
+      "name": "Nemotron 3 Nano 4B",
+      "purpose": "llm",
+      "version": "Q4_K_M"
+    },
+    {
+      "byteSize": 22421827488,
+      "files": [
+        {
+          "byteSize": 22421827488,
+          "downloadUrl": "https://huggingface.co/ggml-org/NVIDIA-Nemotron-3-Nano-30B-A3B-GGUF/resolve/main/NVIDIA-Nemotron-3-Nano-30B-A3B-Q4_K_M.gguf",
+          "path": "NVIDIA-Nemotron-3-Nano-30B-A3B-Q4_K_M.gguf",
+          "sha256": "0f111a0d49777a2a0178758b1aee14e5365c495987499401ef3ebe87754322a8"
+        }
+      ],
+      "id": "nemotron-3-nano-30b-a3b-q4km",
+      "license": "NVIDIA Nemotron Open Model License",
+      "licenseUrl": "https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-nemotron-open-model-license/",
+      "minimumCapabilities": {
+        "minimumProfile": "full"
+      },
+      "name": "Nemotron 3 Nano 30B-A3B",
+      "purpose": "llm",
+      "version": "Q4_K_M"
+    }
+  ]
+}

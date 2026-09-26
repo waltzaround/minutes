@@ -1,0 +1,76 @@
+{
+  "id": "win-32gb-rtx-12gb",
+  "description": "32 GB Windows desktop with 12 GB NVIDIA GPU (RTX 4070)",
+  "hardware": {
+    "os": "windows",
+    "osVersion": "Windows 11 (26100)",
+    "osVersionParts": [
+      10,
+      0,
+      26100
+    ],
+    "osBuild": 26100,
+    "architecture": "x86_64",
+    "cpu": {
+      "model": "AMD Ryzen 7 7700 8-Core Processor",
+      "physicalCores": 8,
+      "logicalCores": 16,
+      "avx2": true,
+      "avx512": false,
+      "appleSiliconGeneration": null,
+      "appleSiliconVariant": null
+    },
+    "memory": {
+      "totalBytes": 34359738368,
+      "availableBytes": 23622320128,
+      "pressure": "low"
+    },
+    "disk": {
+      "availableBytes": 161061273600,
+      "totalBytes": 511101108224,
+      "mountPoint": "C:\\"
+    },
+    "gpus": [
+      {
+        "vendor": "NVIDIA",
+        "model": "NVIDIA GeForce RTX 4070",
+        "vramBytes": 12884901888,
+        "unifiedMemory": false,
+        "integrated": false,
+        "metal": false,
+        "cuda": true,
+        "vulkan": true
+      }
+    ],
+    "audio": {
+      "microphoneAvailable": true,
+      "microphonePermission": "unknown",
+      "systemAudioAvailable": true,
+      "systemAudioPermission": "notRequired",
+      "systemAudioUnavailableReason": null,
+      "inputDevices": [
+        {
+          "id": "fixture:mic",
+          "name": "Built-in Microphone",
+          "isDefault": true,
+          "channels": 1,
+          "sampleRate": 48000
+        }
+      ],
+      "outputDevice": {
+        "id": "fixture:out",
+        "name": "Speakers",
+        "isDefault": true,
+        "channels": 2,
+        "sampleRate": 48000
+      }
+    }
+  },
+  "benchmark": null,
+  "expected": {
+    "profile": "full",
+    "llmModelId": "nemotron-3-nano-30b-a3b-q4km",
+    "profileAfterBenchmark": null,
+    "llmModelIdAfterBenchmark": null
+  }
+}

@@ -1,0 +1,72 @@
+[package]
+name = "minutes"
+version = "0.1.0"
+description = "Private, local-first meeting intelligence"
+edition = "2021"
+rust-version = "1.95"
+publish = false
+
+[lib]
+name = "minutes_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6", features = [] }
+
+[dependencies]
+tauri = { version = "2.11", features = [] }
+tauri-plugin-dialog = "2.7"
+tauri-plugin-opener = "2.5"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+anyhow = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "sync", "time", "macros", "fs", "io-util", "process"] }
+rusqlite = { version = "0.40", features = ["bundled"] }
+uuid = { version = "1", features = ["v4", "v7", "serde"] }
+chrono = { version = "0.4", default-features = false, features = ["clock", "serde", "std"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+tracing-appender = "0.2"
+parking_lot = "0.12"
+ts-rs = { version = "12", features = ["serde-compat", "no-serde-warnings"] }
+sysinfo = { version = "0.39.6", default-features = false, features = ["system", "disk"] }
+cpal = "0.18.2"
+keyring = "4.2"
+aes-gcm = "0.10"
+hex = "0.4"
+reqwest = { version = "0.13", default-features = false, features = ["native-tls", "http2", "json", "stream", "system-proxy", "charset", "blocking"] }
+sha2 = "0.10"
+futures-util = "0.3"
+hound = "3.5.1"
+ringbuf = "0.5.2"
+rubato = "0.16"
+sherpa-onnx = "1.13.8"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-foundation = { version = "0.3", default-features = false, features = ["std", "NSString"] }
+objc2-av-foundation = { version = "0.3.2", default-features = false, features = ["std", "block2", "AVCaptureDevice", "AVMediaFormat"] }
+objc2-metal = { version = "0.3.2", default-features = false, features = ["std", "MTLDevice"] }
+block2 = "0.6"
+libc = "0.2"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62.2", features = ["Win32_Graphics_Dxgi", "Win32_System_LibraryLoader", "Win32_System_SystemInformation"] }
+ash = { version = "0.38", default-features = false, features = ["loaded", "std"] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
+opt-level = 3
+strip = "symbols"
+panic = "unwind"
+
+# Optimise dependencies even in dev builds: hashing multi-GB model files,
+# resampling and SQLite are unusably slow unoptimised. Our own crate stays
+# at opt-level 0 for fast rebuilds.
+[profile.dev.package."*"]
+opt-level = 3

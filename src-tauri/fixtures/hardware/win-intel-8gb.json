@@ -1,0 +1,76 @@
+{
+  "id": "win-intel-8gb",
+  "description": "8 GB Intel Windows laptop (Core i5-8250U, UHD 620)",
+  "hardware": {
+    "os": "windows",
+    "osVersion": "Windows 11 (26100)",
+    "osVersionParts": [
+      10,
+      0,
+      26100
+    ],
+    "osBuild": 26100,
+    "architecture": "x86_64",
+    "cpu": {
+      "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
+      "physicalCores": 4,
+      "logicalCores": 8,
+      "avx2": true,
+      "avx512": false,
+      "appleSiliconGeneration": null,
+      "appleSiliconVariant": null
+    },
+    "memory": {
+      "totalBytes": 8589934592,
+      "availableBytes": 4294967296,
+      "pressure": "low"
+    },
+    "disk": {
+      "availableBytes": 161061273600,
+      "totalBytes": 511101108224,
+      "mountPoint": "C:\\"
+    },
+    "gpus": [
+      {
+        "vendor": "Intel",
+        "model": "Intel(R) UHD Graphics 620",
+        "vramBytes": 134217728,
+        "unifiedMemory": false,
+        "integrated": true,
+        "metal": false,
+        "cuda": false,
+        "vulkan": true
+      }
+    ],
+    "audio": {
+      "microphoneAvailable": true,
+      "microphonePermission": "unknown",
+      "systemAudioAvailable": true,
+      "systemAudioPermission": "notRequired",
+      "systemAudioUnavailableReason": null,
+      "inputDevices": [
+        {
+          "id": "fixture:mic",
+          "name": "Built-in Microphone",
+          "isDefault": true,
+          "channels": 1,
+          "sampleRate": 48000
+        }
+      ],
+      "outputDevice": {
+        "id": "fixture:out",
+        "name": "Speakers",
+        "isDefault": true,
+        "channels": 2,
+        "sampleRate": 48000
+      }
+    }
+  },
+  "benchmark": null,
+  "expected": {
+    "profile": "basic",
+    "llmModelId": "nemotron-3-nano-4b-q4km",
+    "profileAfterBenchmark": null,
+    "llmModelIdAfterBenchmark": null
+  }
+}

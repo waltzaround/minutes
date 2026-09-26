@@ -1,0 +1,104 @@
+{
+  "id": "win-32gb-cpu-only",
+  "description": "32 GB Windows desktop without discrete GPU (Core i5-10400)",
+  "hardware": {
+    "os": "windows",
+    "osVersion": "Windows 11 (26100)",
+    "osVersionParts": [
+      10,
+      0,
+      26100
+    ],
+    "osBuild": 26100,
+    "architecture": "x86_64",
+    "cpu": {
+      "model": "Intel(R) Core(TM) i5-10400 CPU @ 2.90GHz",
+      "physicalCores": 6,
+      "logicalCores": 12,
+      "avx2": true,
+      "avx512": false,
+      "appleSiliconGeneration": null,
+      "appleSiliconVariant": null
+    },
+    "memory": {
+      "totalBytes": 34359738368,
+      "availableBytes": 23622320128,
+      "pressure": "low"
+    },
+    "disk": {
+      "availableBytes": 161061273600,
+      "totalBytes": 511101108224,
+      "mountPoint": "C:\\"
+    },
+    "gpus": [
+      {
+        "vendor": "Intel",
+        "model": "Intel(R) UHD Graphics 630",
+        "vramBytes": 134217728,
+        "unifiedMemory": false,
+        "integrated": true,
+        "metal": false,
+        "cuda": false,
+        "vulkan": true
+      }
+    ],
+    "audio": {
+      "microphoneAvailable": true,
+      "microphonePermission": "unknown",
+      "systemAudioAvailable": true,
+      "systemAudioPermission": "notRequired",
+      "systemAudioUnavailableReason": null,
+      "inputDevices": [
+        {
+          "id": "fixture:mic",
+          "name": "Built-in Microphone",
+          "isDefault": true,
+          "channels": 1,
+          "sampleRate": 48000
+        }
+      ],
+      "outputDevice": {
+        "id": "fixture:out",
+        "name": "Speakers",
+        "isDefault": true,
+        "channels": 2,
+        "sampleRate": 48000
+      }
+    }
+  },
+  "benchmark": {
+    "synthetic": null,
+    "asr": {
+      "modelId": "parakeet-tdt-0.6b-v3-int8",
+      "audioSeconds": 10.0,
+      "loadMs": 1400,
+      "processMs": 1100,
+      "rtf": 0.11,
+      "peakRssBytes": null,
+      "outputPlausible": true,
+      "error": null
+    },
+    "llm": [
+      {
+        "modelId": "nemotron-3-nano-4b-q4km",
+        "backend": "cpu",
+        "contextTokens": 4096,
+        "loadMs": 3000,
+        "promptTokens": 400,
+        "promptTokensPerSecond": 180.0,
+        "generatedTokens": 128,
+        "generationTokensPerSecond": 22.0,
+        "peakRssBytes": null,
+        "stable": true,
+        "structuredOutputValid": true,
+        "error": null
+      }
+    ]
+  },
+  "expected": {
+    "profile": "enhanced",
+    "llmModelId": "nemotron-3-nano-4b-q4km",
+    "profileAfterBenchmark": "full",
+    "llmModelIdAfterBenchmark": "nemotron-3-nano-30b-a3b-q4km"
+  }
+}

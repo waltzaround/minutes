@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-and-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-14          # Apple Silicon
+            llama: macos-arm64
+          - os: windows-latest    # x86_64
+            llama: win-x64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - run: pnpm install --frozen-lockfile
+      - name: Fetch pinned llama.cpp runtime (SHA-256 verified)
+        run: node scripts/fetch-llama.mjs ${{ matrix.llama }}
+
+      - name: Build tools for NeMo-Speech.cpp (macOS)
+        if: runner.os == 'macOS'
+        run: brew install cmake ninja
+      - name: Build tools for NeMo-Speech.cpp (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          choco install -y ninja
+          vcpkg install sentencepiece:x64-windows-static
+          echo "CMAKE_TOOLCHAIN_FILE=$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake" >> $env:GITHUB_ENV
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: Build pinned NeMo-Speech.cpp diarization runtime
+        run: node scripts/build-nemo-speech.mjs
+
+      - name: Frontend typecheck and tests
+        run: |
+          pnpm typecheck
+          pnpm test
+
+      - name: Rust tests (unit + mocked integrations; hardware/model tests are #[ignore])
+        working-directory: src-tauri
+        run: cargo test --locked
+
+      - name: Build installers (unsigned)
+        run: pnpm tauri build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: minutes-${{ matrix.os }}
+          path: |
+            src-tauri/target/release/bundle/dmg/*.dmg
+            src-tauri/target/release/bundle/nsis/*.exe
+          if-no-files-found: error
