@@ -29,9 +29,13 @@ export function installMockBackend(fixtureId: string) {
     linear: { connected: true, defaultTeamId: null, defaultProjectId: null, workspaceName: null },
     onboarding: { completed: onboarded, completedAt: null },
   };
-  const models: ModelStatus[] = manifests.map((m) => ({
-    manifest: m, state: "notInstalled", bytesDownloaded: 0, path: null, error: null,
-  }));
+  // `&installed` shows the recommended models as installed (for screenshots).
+  const installed = new URLSearchParams(location.search).has("installed");
+  const recommended = new Set(caps.assessment.requiredModels);
+  const models: ModelStatus[] = manifests.map((m) => {
+    const done = installed && (recommended.size === 0 || recommended.has(m.id));
+    return { manifest: m, state: done ? "installed" : "notInstalled", bytesDownloaded: done ? m.byteSize : 0, path: null, error: null };
+  });
 
   const seg = (id: string, startMs: number, source: "microphone" | "system", text: string) => ({
     id, startMs, endMs: startMs + 4000, source, speakerClusterId: null, personId: null, speakerConfidence: null,
@@ -39,12 +43,19 @@ export function installMockBackend(fixtureId: string) {
   });
   const meetings: MeetingDetail[] = [
     {
-      summary: { id: "m1", title: "Design Weekly", status: "ready", startedAt: new Date().toISOString(), endedAt: null, durationMs: 47 * 60_000, speakerCount: 4, actionCount: 3, segmentCount: 3 },
+      summary: { id: "m1", title: "Design Weekly", status: "ready", startedAt: new Date().toISOString(), endedAt: null, durationMs: 47 * 60_000, speakerCount: 4, actionCount: 3, segmentCount: 10 },
       processingError: null, audioAvailable: false, audioRetention: "delete_after_processing", transcriptRevision: 0, notionPageUrl: null, tracks: [],
       segments: [
+        { ...seg("s0a", 1352_000, "system", "The onboarding flow tested well, but people still stall on the permissions step."), speakerClusterId: "c-2" },
+        { ...seg("s0b", 1358_000, "microphone", "Is that the copy, or the fact that the dialog comes up before they've seen any value?"), speakerClusterId: "c-me", personId: "p-w" },
+        { ...seg("s0c", 1365_000, "system", "Mostly timing. If we ask after the first recording, the drop-off roughly halves in the prototype."), speakerClusterId: "c-2" },
+        { ...seg("s0d", 1372_000, "system", "That needs a small API change so we can defer the permission check."), speakerClusterId: "c-1", personId: "p-t" },
+        { ...seg("s0e", 1378_000, "microphone", "Okay. Can we get that into this release, or is it too late?"), speakerClusterId: "c-me", personId: "p-w" },
         { ...seg("s1", 1384_000, "microphone", "Let's target Friday."), speakerClusterId: "c-me", personId: "p-w" },
         { ...seg("s2", 1389_000, "system", "Yep, I'll take the API changes."), speakerClusterId: "c-1", personId: "p-t" },
         { ...seg("s3", 1393_000, "system", "I'll have the screens ready Thursday."), speakerClusterId: "c-2" },
+        { ...seg("s4", 1399_000, "microphone", "Great. The analytics numbers for last week still look off to me."), speakerClusterId: "c-me", personId: "p-w" },
+        { ...seg("s5", 1405_000, "system", "Maybe Sarah can look at it."), speakerClusterId: "c-2" },
       ],
     },
     {
@@ -120,7 +131,7 @@ export function installMockBackend(fixtureId: string) {
                 evidence: [{ segmentId: "s3", startMs: 1393000, speaker: "Speaker 2", text: "I'll have the screens ready Thursday." }],
                 linear: { state: "none", issueId: null, identifier: null, url: null, error: null, teamId: null, projectId: null, assigneeId: null, priority: null } },
               { id: "a3", title: "Investigate analytics discrepancy", description: null, ownerPersonId: null, ownerLabel: "Sarah", dueDate: null, dueText: null, assignmentType: "suggested", confidence: 0.35, selected: false, dismissed: false, userEdited: false,
-                evidence: [{ segmentId: "s3", startMs: 1393000, speaker: "Speaker 2", text: "Maybe Sarah can look at it." }],
+                evidence: [{ segmentId: "s5", startMs: 1405000, speaker: "Speaker 2", text: "Maybe Sarah can look at it." }],
                 linear: { state: "none", issueId: null, identifier: null, url: null, error: null, teamId: null, projectId: null, assigneeId: null, priority: null } },
             ],
             unresolvedQuestions: [],

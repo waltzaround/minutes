@@ -2,6 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<!-- Google Analytics (website only; the Minutes app sends nothing) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PYXPBL7EBV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PYXPBL7EBV');
+</script>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Minutes — private meeting notes</title>
 <meta name="description" content="Minutes records your meetings, transcribes them, works out who spoke and drafts the notes — all on your own computer. No cloud, no subscriptions.">
@@ -305,7 +314,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 
 <footer>
   <div class="wrap">
-    <span>© 2026 Minutes</span>
+    <span>© 2026 Minutes · This website uses Google Analytics to count visits. The app itself sends nothing.</span>
     <span>Built with Parakeet, Nemotron, sherpa-onnx, NeMo-Speech.cpp and llama.cpp.</span>
   </div>
 </footer>
