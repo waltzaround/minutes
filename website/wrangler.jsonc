@@ -2,5 +2,7 @@
   "$schema": "../node_modules/wrangler/config-schema.json",
   "name": "minutes-site",
   "compatibility_date": "2026-09-29",
-  "assets": { "directory": "./public", "not_found_handling": "404-page" }
+  "workers_dev": true,
+  "assets": { "directory": "./public", "not_found_handling": "404-page" },
+  "routes": [{ "pattern": "minutes.walt.online", "custom_domain": true }]
 }

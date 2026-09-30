@@ -56,9 +56,9 @@ nav .links a:hover { color: var(--fg); }
 .hero { padding-top: 72px; padding-bottom: 40px; text-align: center; }
 .pill { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); border: 1px solid var(--border); background: var(--card); padding: 4px 12px; border-radius: 99px; }
 .pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
-.hero h1 { font-size: clamp(36px, 6.4vw, 68px); margin: 22px auto 0; max-width: 17ch; }
+.hero h1 { font-size: clamp(32px, 4.6vw, 50px); margin: 22px auto 0; max-width: 900px; text-wrap: balance; }
 .hero h1 em { font-style: normal; color: var(--brand); }
-.hero p.lead { font-size: clamp(17px, 2vw, 20px); color: var(--muted); max-width: 36em; margin: 20px auto 0; }
+.hero p.lead { font-size: clamp(16px, 1.8vw, 18px); color: var(--muted); max-width: 38em; margin: 18px auto 0; text-wrap: pretty; }
 .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
 .btn { display: inline-flex; align-items: center; gap: 9px; padding: 11px 20px; border-radius: 10px; font-size: 15px; font-weight: 500; text-decoration: none; border: 1px solid var(--border); background: var(--card); }
 .btn.primary { background: var(--fg); color: var(--bg); border-color: transparent; }
@@ -66,7 +66,7 @@ nav .links a:hover { color: var(--fg); }
 .fine { font-size: 13px; color: var(--muted); margin-top: 14px; }
 
 /* app mock */
-.mock { margin: 56px auto 0; max-width: 960px; border-radius: 14px; border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow); overflow: hidden; display: grid; grid-template-columns: 220px 1fr; text-align: left; font-size: 13px; }
+.mock { margin: 56px 0 0; border-radius: 14px; border: 1px solid var(--border); background: var(--card); box-shadow: var(--shadow); overflow: hidden; display: grid; grid-template-columns: 220px 1fr; text-align: left; font-size: 13px; }
 .mock .side { background: var(--sidebar); border-right: 1px solid var(--border); padding: 14px 10px; }
 .lights { display: flex; gap: 6px; padding: 0 6px 16px; }
 .lights i { width: 11px; height: 11px; border-radius: 50%; background: var(--border); }
@@ -92,7 +92,7 @@ nav .links a:hover { color: var(--fg); }
 /* sections */
 section { padding: 88px 0 0; }
 .kicker { font-family: var(--display); font-size: 13px; color: var(--brand); text-transform: uppercase; letter-spacing: .08em; }
-section h2 { font-size: clamp(28px, 4vw, 40px); margin-top: 10px; max-width: 20ch; }
+section h2 { font-size: clamp(26px, 3.4vw, 34px); margin-top: 10px; max-width: 22ch; text-wrap: balance; }
 section > .wrap > p.muted { max-width: 38em; margin-top: 14px; font-size: 17px; }
 .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 40px; }
 .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
@@ -125,10 +125,12 @@ details summary { cursor: pointer; font-weight: 500; list-style: none; display: 
 details summary::after { content: "+"; font-family: var(--display); color: var(--muted); }
 details[open] summary::after { content: "–"; }
 details p { color: var(--muted); margin-top: 10px; max-width: 44em; }
+details code { font: 13px var(--display); background: var(--soft); padding: 1px 6px; border-radius: 5px; overflow-wrap: anywhere; }
+.fine a { color: inherit; }
 .faq { margin-top: 28px; max-width: 760px; }
 
 .final { text-align: center; padding-top: 110px; padding-bottom: 90px; }
-.final h2 { margin: 0 auto; }
+.final h2 { margin: 0 auto; font-size: clamp(26px, 3.4vw, 34px); text-wrap: balance; }
 footer { border-top: 1px solid var(--border); padding: 28px 0 40px; font-size: 13px; color: var(--muted); }
 footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 
@@ -166,10 +168,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     <h1>Meeting notes that <em>never leave</em> your laptop.</h1>
     <p class="lead">Minutes records your calls and in-person meetings, transcribes them, works out who said what and drafts the notes, including decisions, open questions and action items. Everything runs locally. There's no cloud and no subscription.</p>
     <div class="cta">
-      <a class="btn primary" href="#requirements"><span class="dot"></span>Early preview for macOS</a>
+      <a class="btn primary" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-macOS-arm64.dmg"><span class="dot"></span>Download for macOS</a>
       <a class="btn" href="#how">See how it works</a>
     </div>
-    <p class="fine">macOS 14.6+ on Apple Silicon · Windows 10+ in testing</p>
+    <p class="fine">Early preview · macOS 14.6+ on Apple Silicon · <a href="#install">Install notes</a> · Windows in testing</p>
 
     <div class="mock" aria-label="Screenshot of the Minutes app showing meeting notes" role="img">
       <div class="side">
@@ -193,6 +195,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         <ul>
           <li>Agreed to ship offline sync before the reporting revamp.</li>
           <li>Pricing change is on hold until the customer interviews finish.</li>
+        </ul>
+        <h4>Decisions</h4>
+        <ul>
+          <li>Offline sync ships in the October release.</li>
         </ul>
         <h4>Action items</h4>
         <div class="action"><span class="box"></span><div>Write the offline sync rollout plan<span class="tag">Sam</span><span class="tag">Fri 17 Oct</span><small>“I'll have a rollout plan by Friday.” · 12:41</small></div></div>
@@ -301,6 +307,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         <details><summary>Do I need a bot in the call?</summary><p>No. Minutes captures your computer's audio output directly, so it works with any meeting app, and in the room with just the microphone.</p></details>
         <details><summary>How accurate is it?</summary><p>Parakeet TDT v3 is one of the most accurate open speech models. Every note links to the transcript it came from, so you can check it, and you can edit anything.</p></details>
         <details><summary>Should I tell people I'm recording?</summary><p>Yes. Minutes reminds you to let everyone know before you start. Recording laws vary, so check what applies where you are.</p></details>
+        <details id="install"><summary>macOS says it can’t verify the app. What do I do?</summary><p>Preview builds aren’t signed or notarised yet. Drag Minutes to Applications, then right-click it and choose Open, and confirm in System Settings → Privacy &amp; Security. Or run <code>xattr -dr com.apple.quarantine /Applications/Minutes.app</code> in Terminal. Older builds are on <a href="https://github.com/waltzaround/minutes-releases/releases">GitHub</a>.</p></details>
         <details><summary>What does it cost?</summary><p>Nothing to run. There are no subscriptions or usage fees, because all of the AI runs on your own hardware.</p></details>
       </div>
     </div>
@@ -309,6 +316,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   <div class="wrap final">
     <h2>Take better notes by taking none.</h2>
     <p class="muted" style="margin-top:14px">Minutes is in early preview on macOS.</p>
+    <div class="cta"><a class="btn primary" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-macOS-arm64.dmg"><span class="dot"></span>Download for macOS</a></div>
   </div>
 </main>
 
@@ -318,5 +326,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     <span>Built with Parakeet, Nemotron, sherpa-onnx, NeMo-Speech.cpp and llama.cpp.</span>
   </div>
 </footer>
+<script>
+  // Open the install FAQ when linked to it.
+  function openHash() { const d = document.getElementById(location.hash.slice(1)); if (d && d.tagName === "DETAILS") d.open = true; }
+  addEventListener("hashchange", openHash); openHash();
+</script>
 </body>
 </html>
