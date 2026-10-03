@@ -53,7 +53,8 @@ run("git", ["submodule", "update", "--init", "--depth", "1", "ggml"]);
 const extra = [];
 if (isWin) {
   // Match the documented SentencePiece triplet and its static C++ runtime.
-  extra.push("-DVCPKG_TARGET_TRIPLET=x64-windows-static", "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", "-DVCPKG_MANIFEST_MODE=OFF", "-DGGML_NATIVE=OFF");
+  // Use ggml's thread pool rather than depending on an unbundled VCOMP140.dll.
+  extra.push("-DVCPKG_TARGET_TRIPLET=x64-windows-static", "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", "-DVCPKG_MANIFEST_MODE=OFF", "-DGGML_NATIVE=OFF", "-DGGML_OPENMP=OFF");
   if (process.env.VCPKG_INSTALLED_DIR) extra.push(`-DVCPKG_INSTALLED_DIR=${process.env.VCPKG_INSTALLED_DIR}`);
 }
 if (!isWin) {
