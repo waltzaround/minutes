@@ -30,7 +30,7 @@ use super::transcript::list_segments;
 use crate::llm::llama::{LlamaConfig, LlamaServer};
 use crate::llm::prompts::{self, Line};
 use crate::llm::schemas::{self, AssignmentType, MeetingAnalysis, RawAnalysis, TranscriptIndex};
-use crate::llm::{model_manager, JsonRequest, LlmError, LocalLlm};
+use crate::llm::{model_manager, JsonRequest, JsonResponse, LlmError, LocalLlm};
 use crate::models::manager::ModelManager;
 use crate::people;
 use crate::speech::engine::SpeechEngine;
@@ -341,6 +341,10 @@ pub fn transcript_for_model(db: &Database, settings: &AppSettings, meeting_id: &
 
 /// Ask for an analysis, validate, retry once with corrections.
 pub fn request_validated(llm: &dyn LocalLlm, user: &str, index: &TranscriptIndex) -> Result<MeetingAnalysis, AnalysisError> {
+    request_validated_with_metrics(llm, user, index).map(|(analysis, _)| analysis)
+}
+
+fn request_validated_with_metrics(llm: &dyn LocalLlm, user: &str, index: &TranscriptIndex) -> Result<(MeetingAnalysis, JsonResponse), AnalysisError> {
     let max_tokens = prompts::output_budget(llm.context_tokens());
     let base = JsonRequest {
         system: prompts::SYSTEM_PROMPT.into(),
@@ -354,7 +358,7 @@ pub fn request_validated(llm: &dyn LocalLlm, user: &str, index: &TranscriptIndex
         Ok(raw) => {
             let (a, report) = schemas::validate(&raw, index);
             if report.is_ok() {
-                return Ok(a);
+                return Ok((a, first));
             }
             (report.problems, Some(a))
         }
@@ -374,7 +378,10 @@ pub fn request_validated(llm: &dyn LocalLlm, user: &str, index: &TranscriptIndex
                 // rest is kept. Structural problems never reach this point.
                 tracing::warn!(problems = ?report.problems, "analysis still had problems after retry; unsupported items dropped");
             }
-            Ok(a)
+            if a.title.is_empty() || a.summary.is_empty() {
+                return Err(AnalysisError::Unavailable("The local AI returned an empty summary after retrying. Your transcript is safe; you can try again.".into()));
+            }
+            Ok((a, second))
         }
         Err(e) => {
             let _ = analysis;
@@ -874,12 +881,19 @@ fn benchmark(deps: &AnalysisDeps, model_id: &str, server: &Mutex<Option<(Arc<Lla
     );
     let index = with_date(prompts::index(&lines), chrono::NaiveDate::from_ymd_opt(2026, 9, 25));
     let user = prompts::user_prompt("Benchmark", "Friday 25 September 2026", &lines, None);
-    let req = JsonRequest { system: prompts::SYSTEM_PROMPT.into(), user, schema: schemas::analysis_schema(), max_tokens: 1024, temperature: 0.2 };
-    let mut stable = true;
-    let mut valid = false;
+    benchmark_requests(llm.as_ref(), &user, &index, &mut out);
+    out.peak_rss_bytes = crate::system::benchmark::current_rss();
+    server.lock().take();
+    Ok(out)
+}
+
+/// Benchmark the same validation and correction path used for real meetings.
+fn benchmark_requests(llm: &dyn LocalLlm, user: &str, index: &TranscriptIndex, out: &mut LlmBenchmark) {
+    out.stable = true;
+    out.structured_output_valid = true;
     for i in 0..2 {
-        match llm.complete_json(&req) {
-            Ok(r) => {
+        match request_validated_with_metrics(llm, user, index) {
+            Ok((_, r)) => {
                 // First run warms caches; report the second.
                 if i == 1 || out.generated_tokens == 0 {
                     out.prompt_tokens = r.prompt_tokens;
@@ -887,20 +901,17 @@ fn benchmark(deps: &AnalysisDeps, model_id: &str, server: &Mutex<Option<(Arc<Lla
                     out.generated_tokens = r.completion_tokens;
                     out.generation_tokens_per_second = r.generation_tokens_per_second;
                 }
-                valid = schemas::parse(&r.content).map(|raw| schemas::validate(&raw, &index).1.is_ok()).unwrap_or(false);
             }
             Err(e) => {
-                stable = false;
-                out.error = Some(e.to_string());
+                out.stable = false;
+                out.structured_output_valid = false;
+                out.error = Some(match e {
+                    AnalysisError::Unavailable(message) | AnalysisError::Failed(message) => message,
+                });
                 break;
             }
         }
     }
-    out.peak_rss_bytes = crate::system::benchmark::current_rss();
-    out.stable = stable;
-    out.structured_output_valid = valid;
-    server.lock().take();
-    Ok(out)
 }
 
 #[cfg(test)]
@@ -973,6 +984,36 @@ mod tests {
         let llm = ScriptedLlm { answers: vec!["not json".into(), "{\"title\": 1}".into()], calls: AtomicUsize::new(0) };
         assert!(matches!(request_validated(&llm, "u", &index()), Err(AnalysisError::Unavailable(_))));
         assert_eq!(llm.calls.load(Ordering::SeqCst), 2);
+    }
+
+    #[test]
+    fn benchmark_accepts_corrected_answers_like_real_meetings() {
+        let llm = ScriptedLlm {
+            answers: vec![answer("S9"), answer("S2"), answer("S9"), answer("S2")],
+            calls: AtomicUsize::new(0),
+        };
+        let mut result = LlmBenchmark::default();
+        benchmark_requests(&llm, "u", &index(), &mut result);
+        assert!(result.stable && result.structured_output_valid);
+        assert!(result.error.is_none());
+        assert_eq!(llm.calls.load(Ordering::SeqCst), 4);
+    }
+
+    #[test]
+    fn benchmark_reports_unusable_output() {
+        let llm = ScriptedLlm { answers: vec!["not json".into(); 2], calls: AtomicUsize::new(0) };
+        let mut result = LlmBenchmark::default();
+        benchmark_requests(&llm, "u", &index(), &mut result);
+        assert!(!result.structured_output_valid);
+        assert!(result.error.is_some());
+    }
+
+    #[test]
+    fn empty_summary_after_retry_is_unavailable() {
+        let mut empty: serde_json::Value = serde_json::from_str(&answer("S2")).unwrap();
+        empty["summary"] = serde_json::json!([]);
+        let llm = ScriptedLlm { answers: vec![empty.to_string(); 2], calls: AtomicUsize::new(0) };
+        assert!(request_validated(&llm, "u", &index()).is_err());
     }
 
     #[test]

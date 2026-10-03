@@ -51,6 +51,11 @@ run("git", ["submodule", "update", "--init", "--depth", "1", "ggml"]);
 // 2. macOS: link SentencePiece statically (the upstream CMake only does this
 //    on Linux; its GNU-only --exclude-libs flag breaks Apple's linker).
 const extra = [];
+if (isWin) {
+  // Match the documented SentencePiece triplet and its static C++ runtime.
+  extra.push("-DVCPKG_TARGET_TRIPLET=x64-windows-static", "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", "-DVCPKG_MANIFEST_MODE=OFF", "-DGGML_NATIVE=OFF");
+  if (process.env.VCPKG_INSTALLED_DIR) extra.push(`-DVCPKG_INSTALLED_DIR=${process.env.VCPKG_INSTALLED_DIR}`);
+}
 if (!isWin) {
   const cm = join(src, "src", "asr", "CMakeLists.txt");
   const text = readFileSync(cm, "utf8");

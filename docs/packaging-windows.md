@@ -2,7 +2,7 @@
 
 ## Build (on Windows, x86_64)
 
-Prerequisites: Rust stable (MSVC), Node 22, pnpm, Visual Studio Build Tools (C++), and WebView2 (preinstalled on Windows 11; the installer bootstraps it on Windows 10).
+Prerequisites: Rust stable (MSVC), Node 22, pnpm, Visual Studio 2022 Build Tools (C++), and WebView2 (preinstalled on Windows 11; the installer bootstraps it on Windows 10). Visual Studio 2019 cannot link the prebuilt sherpa-onnx libraries: it reports unresolved `__std_*` symbols.
 
 ```powershell
 pnpm install
@@ -10,6 +10,12 @@ pnpm install
 
 ```powershell
 node scripts/fetch-llama.mjs win-x64
+```
+
+Build the diarization runtime from a Visual Studio 2022 Developer PowerShell, with CMake 3.26+, Ninja, and `sentencepiece:x64-windows-static` installed through vcpkg. Set `CMAKE_TOOLCHAIN_FILE` to vcpkg's `scripts/buildsystems/vcpkg.cmake`. If using a separate vcpkg manifest, also set `VCPKG_INSTALLED_DIR` to its `vcpkg_installed` directory.
+
+```powershell
+node scripts/build-nemo-speech.mjs
 ```
 
 ```powershell

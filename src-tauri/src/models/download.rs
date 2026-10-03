@@ -225,6 +225,12 @@ impl Downloader {
                 completed_before += f.byte_size;
                 continue;
             }
+            // Manifests can contain nested files (e.g. test_wavs/en.wav).
+            // Their .part files live alongside the final file, so create
+            // the parent on every attempt, including retries of old failures.
+            if let Some(parent) = final_path.parent() {
+                tokio::fs::create_dir_all(parent).await?;
+            }
             // Re-hashing what's already on disk can take a while for large
             // files; show that instead of looking stuck.
             let partial = tokio::fs::metadata(part_path(&dir, f)).await.map(|md| md.len()).unwrap_or(0);
@@ -515,6 +521,44 @@ mod tests {
         dl.download(&m, |_| {}).await.unwrap();
         assert_eq!(std::fs::read(mgr.model_dir(&m.id).join("file.bin")).unwrap(), body);
         assert!(!mgr.model_dir(&m.id).join("file.bin.part").exists());
+    }
+
+    #[tokio::test]
+    async fn downloads_nested_file_on_fresh_install() {
+        let body = vec![3u8; 10_000];
+        let (url, _) = serve(body.clone(), None).await;
+        let (_d, mgr, dl) = setup();
+        let mut m = manifest(&url, &body);
+        m.files[0].path = "test_wavs/en.wav".into();
+
+        dl.download(&m, |_| {}).await.unwrap();
+
+        assert_eq!(std::fs::read(mgr.model_dir(&m.id).join(&m.files[0].path)).unwrap(), body);
+        assert!(!part_path(&mgr.model_dir(&m.id), &m.files[0]).exists());
+        assert_eq!(mgr.status(&m).state, InstallState::Installed);
+    }
+
+    #[tokio::test]
+    async fn retries_failed_install_with_missing_nested_directory() {
+        let body = vec![4u8; 10_000];
+        let (url, hits) = serve(body.clone(), None).await;
+        let (_d, mgr, dl) = setup();
+        let mut m = manifest(&url, &body);
+        let mut nested = m.files[0].clone();
+        nested.path = "test_wavs/en.wav".into();
+        m.files.push(nested);
+        m.byte_size *= 2;
+        let dir = mgr.model_dir(&m.id);
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(dir.join("file.bin"), &body).unwrap();
+        mgr.record(&m, InstallState::Failed, body.len() as u64, Some("File error: missing directory")).unwrap();
+
+        dl.download(&m, |_| {}).await.unwrap();
+
+        assert_eq!(hits.load(Ordering::SeqCst), 1, "completed files should be reused");
+        assert_eq!(std::fs::read(dir.join("test_wavs/en.wav")).unwrap(), body);
+        assert_eq!(mgr.status(&m).state, InstallState::Installed);
+        assert!(mgr.status(&m).error.is_none());
     }
 
     #[tokio::test]

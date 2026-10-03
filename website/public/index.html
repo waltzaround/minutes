@@ -129,6 +129,11 @@ details code { font: 13px var(--display); background: var(--soft); padding: 1px 
 .fine a { color: inherit; }
 .faq { margin-top: 28px; max-width: 760px; }
 
+.release-notes { margin-top: 28px; max-width: 800px; }
+.release-notes h3 { font-size: 22px; margin: 10px 0 18px; }
+.release-notes ul { padding-left: 22px; }
+.release-notes li { margin: 10px 0; }
+
 .final { text-align: center; padding-top: 110px; padding-bottom: 90px; }
 .final h2 { margin: 0 auto; font-size: clamp(26px, 3.4vw, 34px); text-wrap: balance; }
 footer { border-top: 1px solid var(--border); padding: 28px 0 40px; font-size: 13px; color: var(--muted); }
@@ -157,6 +162,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <a href="#how">How it works</a>
       <a href="#privacy">Privacy</a>
       <a href="#requirements">Requirements</a>
+      <a href="#patch-notes">Patch notes</a>
       <a href="#faq">FAQ</a>
     </div>
   </nav>
@@ -169,9 +175,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     <p class="lead">Minutes records your calls and in-person meetings, transcribes them, works out who said what and drafts the notes, including decisions, open questions and action items. Everything runs locally. There's no cloud and no subscription.</p>
     <div class="cta">
       <a class="btn primary" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-macOS-arm64.dmg"><span class="dot"></span>Download for macOS</a>
-      <a class="btn" href="#how">See how it works</a>
+      <a class="btn" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-Windows-x64-setup.exe">Download for Windows</a>
     </div>
-    <p class="fine">Early preview · macOS 14.6+ on Apple Silicon · <a href="#install">Install notes</a> · Windows in testing</p>
+    <p class="fine">v0.1.1 preview · macOS 14.6+ (Apple Silicon) · Windows 10+ (x64)<br>Unsigned builds · <a href="#install">Install notes</a> · <a href="#patch-notes">What’s new</a></p>
 
     <div class="mock" aria-label="Screenshot of the Minutes app showing meeting notes" role="img">
       <div class="side">
@@ -235,7 +241,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         <div class="card">
           <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
           <h3>Search everything</h3>
-          <p>Press ⌘K to find any meeting, decision or sentence anyone said, and jump straight to that point in the transcript.</p>
+          <p>Press ⌘K on Mac or Ctrl+K on Windows to find any meeting, decision or sentence anyone said, and jump straight to that point in the transcript.</p>
         </div>
         <div class="card">
           <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></div>
@@ -251,7 +257,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <div class="kicker">How it works</div>
       <h2>Press record. Get notes.</h2>
       <div class="flow">
-        <div><h3>Record</h3><p>Start with ⇧⌘R. Pick your microphone and whether to capture the call audio.</p></div>
+        <div><h3>Record</h3><p>Start with ⇧⌘R on Mac or Ctrl+Shift+R on Windows. Pick your microphone and whether to capture the call audio.</p></div>
         <div><h3>Transcribe</h3><p>Speech turns into text as you talk, and the transcript is finalised when you stop.</p></div>
         <div><h3>Attribute</h3><p>Speakers are separated and matched to the people you've enrolled.</p></div>
         <div><h3>Summarise</h3><p>The local model writes the notes, then you edit, search, export or sync them.</p></div>
@@ -294,7 +300,27 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           </tbody>
         </table>
       </div>
-      <p class="fine" style="margin-top:14px">macOS 14.6 or later on Apple Silicon. Windows 10 or later (x64) is in testing. Models are downloaded once, from about 3 GB to 25 GB depending on your tier.</p>
+      <p class="fine" style="margin-top:14px">macOS 14.6 or later on Apple Silicon. Windows 10 or later (x64). Models are downloaded once, from about 3 GB to 25 GB depending on your tier.</p>
+    </div>
+  </section>
+
+  <section id="patch-notes">
+    <div class="wrap">
+      <div class="kicker">Patch notes</div>
+      <h2>New in Minutes</h2>
+      <article class="card release-notes">
+        <p class="muted"><time datetime="2026-10-03">3 October 2026</time> · Preview</p>
+        <h3>v0.1.1 — Windows joins Mac</h3>
+        <ul>
+          <li>Download Minutes for Windows 10 and later (x64), alongside a refreshed Mac build for Apple Silicon.</li>
+          <li>Fixed Windows disk-space detection and model downloads that could fail during setup.</li>
+          <li>Improved the summary setup check so answers that can be corrected do not disable summaries.</li>
+          <li>Retest your summary model from Settings → Advanced → Run system check again. This also restores summaries after a previous failed check when the new test passes.</li>
+          <li>Bundled the Windows speaker-separation runtime and verified microphone and system-audio recording on Windows.</li>
+        </ul>
+        <p class="fine">Already installed? Install the new version to keep your meetings and downloaded models. Preview builds are unsigned; review AI-generated notes before using them.</p>
+        <p class="fine"><a href="https://github.com/waltzaround/minutes-releases/releases/tag/v0.1.1">Full release notes and checksums</a> · <a href="https://github.com/waltzaround/minutes-releases/releases">Previous releases</a></p>
+      </article>
     </div>
   </section>
 
@@ -308,6 +334,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
         <details><summary>How accurate is it?</summary><p>Parakeet TDT v3 is one of the most accurate open speech models. Every note links to the transcript it came from, so you can check it, and you can edit anything.</p></details>
         <details><summary>Should I tell people I'm recording?</summary><p>Yes. Minutes reminds you to let everyone know before you start. Recording laws vary, so check what applies where you are.</p></details>
         <details id="install"><summary>macOS says it can’t verify the app. What do I do?</summary><p>Preview builds aren’t signed or notarised yet. Drag Minutes to Applications, then right-click it and choose Open, and confirm in System Settings → Privacy &amp; Security. Or run <code>xattr -dr com.apple.quarantine /Applications/Minutes.app</code> in Terminal. Older builds are on <a href="https://github.com/waltzaround/minutes-releases/releases">GitHub</a>.</p></details>
+        <details><summary>What should I expect when installing on Windows?</summary><p>Download the x64 installer above. This preview is unsigned, so Windows may show a publisher warning. It installs for your Windows user account and downloads WebView2 if needed. The AI models are downloaded during setup.</p></details>
         <details><summary>What does it cost?</summary><p>Nothing to run. There are no subscriptions or usage fees, because all of the AI runs on your own hardware.</p></details>
       </div>
     </div>
@@ -315,8 +342,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 
   <div class="wrap final">
     <h2>Take better notes by taking none.</h2>
-    <p class="muted" style="margin-top:14px">Minutes is in early preview on macOS.</p>
-    <div class="cta"><a class="btn primary" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-macOS-arm64.dmg"><span class="dot"></span>Download for macOS</a></div>
+    <p class="muted" style="margin-top:14px">Minutes is in early preview on macOS and Windows.</p>
+    <div class="cta"><a class="btn primary" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-macOS-arm64.dmg"><span class="dot"></span>Download for macOS</a><a class="btn" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-Windows-x64-setup.exe">Download for Windows</a></div>
+    <p class="fine">v0.1.1 preview · <a href="#patch-notes">Read the patch notes</a></p>
   </div>
 </main>
 

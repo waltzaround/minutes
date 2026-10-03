@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { KeyValue, Section } from "@/components/app/Page";
-import { api } from "@/lib/api";
+import { api, modelsApi } from "@/lib/api";
 import { invoke } from "@/lib/api/invoke";
 import { save } from "@tauri-apps/plugin-dialog";
 import { keys, useAppInfo, useCapabilities, usePatchSettings, useSettings } from "@/lib/api/queries";
@@ -56,6 +56,10 @@ function SystemCheck() {
     try {
       await api.system.capabilities(true);
       await api.system.runBenchmark("synthetic");
+      const models = await modelsApi.list();
+      if (models.some((m) => m.state === "installed" && m.manifest.purpose === "llm")) {
+        await api.system.runBenchmark("llm");
+      }
       qc.setQueryData(keys.capabilities, await api.system.capabilities(false));
       toast.success("System check complete");
     } catch (e) {

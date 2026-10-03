@@ -35,6 +35,9 @@ pub async fn get_recommended_profile(state: State<'_, AppState>) -> AppResult<Ca
 /// corresponding runtime is installed.
 #[tauri::command]
 pub async fn run_benchmark(state: State<'_, AppState>, stage: String) -> AppResult<BenchmarkSummary> {
+    if stage != "synthetic" && state.recorder.is_recording() {
+        return Err(AppError::Unavailable("Stop recording before testing AI models.".into()));
+    }
     let system = state.system.clone();
     match stage.as_str() {
         "synthetic" => {

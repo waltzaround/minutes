@@ -29,7 +29,7 @@ Prerequisites:
 - Rust 1.95+ (`rustup update stable`)
 - Node 22+ and pnpm 10
 - macOS: Xcode command-line tools
-- Windows: Visual Studio Build Tools with the C++ workload, and WebView2 (preinstalled on Windows 11)
+- Windows: Visual Studio 2022 Build Tools with the C++ workload, and WebView2 (preinstalled on Windows 11). The prebuilt speech libraries require the newer C++ runtime libraries; Visual Studio 2019 cannot link them.
 
 ```bash
 pnpm install

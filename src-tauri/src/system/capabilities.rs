@@ -268,7 +268,13 @@ pub fn detect_disk(path: &std::path::Path) -> DiskInfo {
     disks
         .list()
         .iter()
-        .filter(|d| target.starts_with(d.mount_point()))
+        .filter(|d| {
+            // Windows canonical paths use a verbatim prefix (\\?\), while
+            // sysinfo reports ordinary drive paths. Compare like forms.
+            let mount = std::fs::canonicalize(d.mount_point())
+                .unwrap_or_else(|_| d.mount_point().to_path_buf());
+            target.starts_with(mount)
+        })
         .max_by_key(|d| d.mount_point().as_os_str().len())
         .map(|d| DiskInfo {
             available_bytes: d.available_space(),

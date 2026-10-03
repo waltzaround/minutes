@@ -537,9 +537,12 @@ mod tests {
         let id = rec.stop().unwrap();
         assert_eq!(id, status.meeting_id);
         let tracks = db.with(|c| store::tracks(c, &id)).unwrap();
-        assert!(!tracks.is_empty());
+        for source in [AudioSource::Microphone, AudioSource::System] {
+            assert!(tracks.iter().any(|t| t.source == source), "missing {source:?} track");
+        }
         for t in &tracks {
             let ms = crate::audio::wav::duration_ms(std::path::Path::new(&t.path)).unwrap();
+            eprintln!("{:?}: recorded {ms} ms", t.source);
             assert!(ms > 1000, "{:?} only {ms} ms", t.source);
         }
         assert!(events.lock().iter().any(|e| e == crate::events::AUDIO_LEVEL));
