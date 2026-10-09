@@ -172,12 +172,12 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   <div class="wrap hero">
     <span class="pill"><i></i>Runs entirely on your computer</span>
     <h1>Meeting notes that <em>never leave</em> your laptop.</h1>
-    <p class="lead">Minutes records your calls and in-person meetings, transcribes them, works out who said what and drafts the notes, including decisions, open questions and action items. Everything runs locally. There's no cloud and no subscription.</p>
+    <p class="lead">Minutes records your calls, classes and in-person meetings, or imports saved audio and video. It transcribes them, works out who said what and drafts the notes, including decisions, open questions and action items. Everything runs locally. There's no cloud and no subscription.</p>
     <div class="cta">
       <a class="btn primary" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-macOS-arm64.dmg"><span class="dot"></span>Download for macOS</a>
       <a class="btn" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-Windows-x64-setup.exe">Download for Windows</a>
     </div>
-    <p class="fine">v0.1.1 preview · macOS 14.6+ (Apple Silicon) · Windows 10+ (x64)<br>Unsigned builds · <a href="#install">Install notes</a> · <a href="#patch-notes">What’s new</a></p>
+    <p class="fine">v0.1.2 preview · macOS 14.6+ (Apple Silicon) · Windows 10+ (x64)<br>Unsigned builds · <a href="#install">Install notes</a> · <a href="#patch-notes">What’s new</a></p>
 
     <div class="mock" aria-label="Screenshot of the Minutes app showing meeting notes" role="img">
       <div class="side">
@@ -222,6 +222,16 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></svg></div>
           <h3>Records both sides</h3>
           <p>Your microphone and the meeting audio are captured as separate tracks. It works with Zoom, Meet or Teams, and there's no bot joining the call.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5v14M16 5v14"/></svg></div>
+          <h3>Take a break, keep the session</h3>
+          <p>Pause during a class or meeting break, close Minutes, and resume the same session later. Break time is excluded, and speakers are identified across the full recording when you finish.</p>
+        </div>
+        <div class="card">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="14" height="14" rx="2"/><path d="m17 10 4-3v10l-4-3M10 9v6M7 12l3-3 3 3"/></svg></div>
+          <h3>Import audio or video</h3>
+          <p>Turn a saved class or meeting recording into a transcript and notes. Everything is processed locally and the original file stays untouched. Import requires <a href="#import">FFmpeg installed separately</a>.</p>
         </div>
         <div class="card">
           <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h14"/></svg></div>
@@ -309,6 +319,19 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <div class="kicker">Patch notes</div>
       <h2>New in Minutes</h2>
       <article class="card release-notes">
+        <p class="muted"><time datetime="2026-10-09">9 October 2026</time> · Preview</p>
+        <h3>v0.1.2 — Class breaks and saved recordings</h3>
+        <ul>
+          <li>Pause a session for a break, close Minutes, and resume the same recording later.</li>
+          <li>Break time is excluded from timers and transcript timestamps. Earlier audio chunks are preserved.</li>
+          <li>Import audio or video for the usual transcript, speaker identification and notes workflow. The original file stays untouched.</li>
+          <li>Resumed transcription rebuilds provisional text without duplicate segments, and speaker identification covers the complete recording.</li>
+          <li>Import requires <a href="#import">FFmpeg installed separately</a>. Missing, damaged and silent files produce a clear error.</li>
+        </ul>
+        <p class="fine">Already installed? Install the new version to keep your meetings and downloaded models. Preview builds are unsigned; review AI-generated notes before using them.</p>
+        <p class="fine"><a href="https://github.com/waltzaround/minutes-releases/releases/tag/v0.1.2">Full release notes and checksums</a></p>
+      </article>
+      <article class="card release-notes">
         <p class="muted"><time datetime="2026-10-03">3 October 2026</time> · Preview</p>
         <h3>v0.1.1 — Windows joins Mac</h3>
         <ul>
@@ -330,6 +353,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <h2>Questions</h2>
       <div class="faq">
         <details><summary>Does anything get uploaded?</summary><p>No. The only network requests are to download models, and to Notion or Linear if you connect them and approve a sync.</p></details>
+        <details><summary>Can I pause during a class break?</summary><p>Yes. Choose Pause session, then open that session and choose Resume recording when the class continues. You can close Minutes while paused. Break time is excluded, and speakers are identified across the full session when you finish.</p></details>
+        <details id="import"><summary>How do I import audio or video?</summary><p>Choose Import audio or video on the New meeting screen. Import needs FFmpeg installed separately: on macOS, use <code>brew install ffmpeg</code>; on Windows, install FFmpeg and add its executable folder to PATH. Minutes extracts the first audio track locally and follows the same transcript and notes workflow. It leaves the original file untouched.</p></details>
         <details><summary>Do I need a bot in the call?</summary><p>No. Minutes captures your computer's audio output directly, so it works with any meeting app, and in the room with just the microphone.</p></details>
         <details><summary>How accurate is it?</summary><p>Parakeet TDT v3 is one of the most accurate open speech models. Every note links to the transcript it came from, so you can check it, and you can edit anything.</p></details>
         <details><summary>Should I tell people I'm recording?</summary><p>Yes. Minutes reminds you to let everyone know before you start. Recording laws vary, so check what applies where you are.</p></details>
@@ -344,7 +369,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     <h2>Take better notes by taking none.</h2>
     <p class="muted" style="margin-top:14px">Minutes is in early preview on macOS and Windows.</p>
     <div class="cta"><a class="btn primary" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-macOS-arm64.dmg"><span class="dot"></span>Download for macOS</a><a class="btn" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-Windows-x64-setup.exe">Download for Windows</a></div>
-    <p class="fine">v0.1.1 preview · <a href="#patch-notes">Read the patch notes</a></p>
+    <p class="fine">v0.1.2 preview · <a href="#patch-notes">Read the patch notes</a></p>
   </div>
 </main>
 

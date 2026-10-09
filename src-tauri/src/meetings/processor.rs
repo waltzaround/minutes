@@ -144,10 +144,21 @@ fn run(deps: ProcessorDeps, rx: Receiver<Job>) {
 fn process(deps: &ProcessorDeps, job: Job) -> anyhow::Result<()> {
     let id = job.meeting_id;
     // 1. Let the live transcriber finish everything it received.
-    let report: LiveReport = match job.live {
+    let mut report: LiveReport = match job.live {
         Some(live) => live.handle.join().unwrap_or_default(),
         None => LiveReport::default(),
     };
+    // Live coverage is in memory and cannot span an app restart. Rebuild the
+    // complete transcript after a pause, then diarize all chunks together.
+    let full_pass: bool = deps.db.with(|c| c.query_row(
+        "SELECT needs_full_transcription FROM meetings WHERE id = ?1", [&id], |r| r.get(0)))?;
+    if full_pass {
+        if !deps.engine.asr_installed() {
+            anyhow::bail!("The transcription models are not installed. Download them in Settings → Models, then choose “Transcribe again”.");
+        }
+        deps.db.with(|c| c.execute("DELETE FROM transcript_segments WHERE meeting_id = ?1", [&id]))?;
+        report = LiveReport::default();
+    }
     if let Some(e) = &report.error {
         tracing::warn!(meeting_id = id, error = e, "live transcription had an error; falling back to full pass");
     }
@@ -215,6 +226,8 @@ fn process(deps: &ProcessorDeps, job: Job) -> anyhow::Result<()> {
             tracing::warn!(meeting_id = id, step = step.name(), error = ?e, "speaker step failed");
         }
     }
+
+    deps.db.with(|c| c.execute("UPDATE meetings SET needs_full_transcription = 0 WHERE id = ?1", [&id]))?;
 
     // 4. Finalise.
     progress(deps, &id, ProcessingStage::Finishing, None, None);

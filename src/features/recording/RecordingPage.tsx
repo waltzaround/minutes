@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { AlertTriangle, Mic, MonitorSpeaker, Square } from "lucide-react";
+import { AlertTriangle, Mic, MonitorSpeaker, Pause, Square } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router";
 import { toast } from "sonner";
@@ -12,18 +12,10 @@ import { useRecordingStatus } from "@/lib/api/queries";
 import type { AudioLevel, AudioSource, MeetingWarning, RecordingStatus, SourceStatus } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { formatClock } from "@/lib/utils/format";
+import { useRecordingElapsed } from "./useRecordingElapsed";
 import { LevelMeter } from "./LevelMeter";
 import { LiveTranscript } from "./LiveTranscript";
 
-function useElapsed(startedAt: string | undefined, initialMs: number) {
-  const [now, setNow] = useState(() => Date.now());
-  useEffect(() => {
-    const t = setInterval(() => setNow(Date.now()), 250);
-    return () => clearInterval(t);
-  }, []);
-  if (!startedAt) return initialMs;
-  return Math.max(initialMs, now - new Date(startedAt).getTime());
-}
 
 function SourceCard({ label, icon: Icon, status, level, onReconnect }: {
   label: string;
@@ -62,7 +54,7 @@ export function RecordingPage() {
   const [levels, setLevels] = useState<Record<AudioSource, number>>({ microphone: 0, system: 0 });
   const [warnings, setWarnings] = useState<MeetingWarning[]>([]);
   const [stopping, setStopping] = useState(false);
-  const elapsed = useElapsed(status?.startedAt, status?.elapsedMs ?? 0);
+  const elapsed = useRecordingElapsed(status?.startedAt, status?.elapsedMs ?? 0);
   const inset = useHeaderInset();
 
   useEffect(() => {
@@ -85,10 +77,10 @@ export function RecordingPage() {
   if (isLoading) return null;
   if (!status) return <Navigate to="/" replace />;
 
-  const stop = async () => {
+  const stop = async (pause = false) => {
     setStopping(true);
     try {
-      const id = await meetingsApi.stop();
+      const id = await (pause ? meetingsApi.pause() : meetingsApi.stop());
       qc.setQueryData(["recording"], null);
       void qc.invalidateQueries({ queryKey: ["meetings"] });
       navigate(`/meetings/${id}`, { replace: true });
@@ -160,11 +152,14 @@ export function RecordingPage() {
         </div>
       </PageBody>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center">
+      <div className="pointer-events-none absolute inset-x-0 bottom-6 flex justify-center gap-3">
+        <Button size="lg" variant="outline" className="pointer-events-auto rounded-full" disabled={stopping} onClick={() => stop(true)}>
+          <Pause className="size-4" /> Pause session
+        </Button>
         <Button
           size="lg"
           className="pointer-events-auto h-11 gap-2.5 rounded-full bg-recording px-5 text-white shadow-lg shadow-black/30 hover:bg-recording/90"
-          onClick={stop}
+          onClick={() => stop()}
           disabled={stopping}
         >
           <Square className="size-3.5 fill-current" aria-hidden />

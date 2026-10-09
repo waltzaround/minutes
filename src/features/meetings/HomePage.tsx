@@ -1,7 +1,8 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Download, Loader2, Mic, MonitorSpeaker, ShieldCheck, Tag } from "lucide-react";
 import { useState, type ReactNode } from "react";
-import { Link, Navigate } from "react-router";
+import { open } from "@tauri-apps/plugin-dialog";
+import { Link, Navigate, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectSeparator, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -30,6 +31,20 @@ function Row({ icon: Icon, label, hint, htmlFor, children }: { icon: typeof Mic;
 
 function NewMeetingForm() {
   const start = useStartMeeting();
+  const navigate = useNavigate();
+  const qc = useQueryClient();
+  const [importing, setImporting] = useState(false);
+  const importMedia = async () => {
+    try {
+      const path = await open({ multiple: false, filters: [{ name: "Audio or video", extensions: ["mp4", "mov", "mkv", "webm", "avi", "m4v", "wav", "mp3", "m4a", "flac", "ogg", "aac"] }] });
+      if (!path) return;
+      setImporting(true);
+      const id = await meetingsApi.importMedia(path);
+      void qc.invalidateQueries({ queryKey: ["meetings"] });
+      navigate(`/meetings/${id}`);
+    } catch (e) { toast.error((e as Error).message); }
+    finally { setImporting(false); }
+  };
   const { data: settings } = useSettings();
   const { data: devices, refetch } = useAudioDevices();
   const patch = usePatchSettings();
@@ -117,11 +132,18 @@ function NewMeetingForm() {
           </span>
           {settings.general.consentReminder && <span className="pl-5">Let everyone know the meeting is being recorded.</span>}
         </div>
-        <Button type="submit" disabled={starting} className="h-9 gap-2 bg-recording px-4 text-white hover:bg-recording/90">
+        <Button type="submit" disabled={starting || importing} className="h-9 gap-2 bg-recording px-4 text-white hover:bg-recording/90">
           {starting ? <Loader2 className="size-3.5 animate-spin" /> : <span className="size-2 rounded-full bg-white" aria-hidden />}
           Start recording
           <kbd className="ml-1 font-sans text-[11px] opacity-70">{isMac ? "⇧⌘R" : "Ctrl+Shift+R"}</kbd>
         </Button>
+      </div>
+      <div className="mt-6 border-t pt-4">
+        <Button type="button" variant="outline" disabled={importing || starting} onClick={importMedia}>
+          {importing ? <Loader2 className="size-4 animate-spin" /> : null}
+          {importing ? "Extracting audio…" : "Import audio or video"}
+        </Button>
+        <p className="mt-2 text-xs text-muted-foreground">Transcribe a saved class or meeting and generate notes. Files are processed locally.</p>
       </div>
     </form>
   );

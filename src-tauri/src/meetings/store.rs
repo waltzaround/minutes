@@ -86,8 +86,8 @@ pub fn finish_recording(db: &Database, meeting_id: &str, duration_ms: u64, statu
     let ts = now();
     db.with(|c| {
         c.execute(
-            "UPDATE meetings SET status = ?2, ended_at = ?3, duration_ms = ?4, updated_at = ?3 WHERE id = ?1",
-            params![meeting_id, status.as_db(), ts, duration_ms as i64],
+            "UPDATE meetings SET status = ?2, ended_at = ?3, duration_ms = ?4, updated_at = ?3, paused = ?5, needs_full_transcription = MAX(needs_full_transcription, ?5) WHERE id = ?1",
+            params![meeting_id, status.as_db(), ts, duration_ms as i64, (status == MeetingStatus::Paused) as i32],
         )
         .map(|_| ())
     })
@@ -108,7 +108,7 @@ pub fn rename(db: &Database, meeting_id: &str, title: &str) -> rusqlite::Result<
 }
 
 const SUMMARY_SQL: &str = "
-    SELECT m.id, m.title, m.status, m.started_at, m.ended_at, m.duration_ms,
+    SELECT m.id, m.title, CASE WHEN m.paused = 1 THEN 'paused' ELSE m.status END, m.started_at, m.ended_at, m.duration_ms,
            (SELECT count(*) FROM speaker_clusters sc WHERE sc.meeting_id = m.id AND sc.merged_into IS NULL
               AND EXISTS (SELECT 1 FROM transcript_segments t WHERE t.speaker_cluster_id = sc.id)),
            (SELECT count(*) FROM action_items a WHERE a.meeting_id = m.id AND a.dismissed = 0),
@@ -223,6 +223,24 @@ pub fn delete_meeting(db: &Database, meeting_id: &str, meetings_root: &std::path
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn pause_survives_reopening_and_is_not_crash_recovery() {
+        let root = tempfile::tempdir().unwrap();
+        let path = root.path().join("sessions.db");
+        let db = Database::open(&path).unwrap();
+        let (id, _, _) = create_meeting(&db, "Class", root.path(), true, false, "delete_after_processing").unwrap();
+        finish_recording(&db, &id, 60_000, MeetingStatus::Paused).unwrap();
+        drop(db);
+        let db = Database::open(&path).unwrap();
+        assert!(mark_interrupted(&db).unwrap().is_empty());
+        let m = get_summary(&db, &id).unwrap().unwrap();
+        assert_eq!(m.status, MeetingStatus::Paused);
+        assert_eq!(m.duration_ms, Some(60_000));
+        assert!(db.with(|c| c.query_row("SELECT needs_full_transcription FROM meetings WHERE id = ?1", [&id], |r| r.get::<_, bool>(0))).unwrap());
+        finish_recording(&db, &id, 60_000, MeetingStatus::Processing).unwrap();
+        assert_eq!(get_summary(&db, &id).unwrap().unwrap().status, MeetingStatus::Processing);
+    }
 
     #[test]
     fn create_list_interrupt_delete() {

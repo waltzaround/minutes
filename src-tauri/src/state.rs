@@ -224,6 +224,10 @@ impl AppState {
         self.live.lock().take();
     }
 
+    pub fn drain_live_transcription(&self) {
+        if let Some((_, live)) = self.live.lock().take() { let _ = live.handle.join(); }
+    }
+
     /// Queue post-recording processing, handing over the live transcriber.
     pub fn on_recording_stopped(&self, meeting_id: &str) {
         let live = self.live.lock().take().map(|(_, l)| l);

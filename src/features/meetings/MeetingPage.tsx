@@ -30,6 +30,7 @@ export function MeetingPage() {
   const key = ["meeting", id];
   const { data: m, error } = useQuery({ queryKey: key, queryFn: () => meetingDetailApi.get(id) });
   const [progress, setProgress] = useState<ProcessingProgress | null>(null);
+  const [sessionBusy, setSessionBusy] = useState(false);
   const [editingTitle, setEditingTitle] = useState(false);
   const inset = useHeaderInset();
   const [params, setParams] = useSearchParams();
@@ -78,6 +79,20 @@ export function MeetingPage() {
   };
 
   const processing = s.status === "processing";
+  const paused = s.status === "paused";
+  const sessionAction = async (resume: boolean) => {
+    setSessionBusy(true);
+    try {
+      if (resume) {
+        const status = await meetingsApi.resume(id);
+        qc.setQueryData(["recording"], status);
+        navigate("/recording");
+      } else { await meetingsApi.finishPaused(id); }
+      void qc.invalidateQueries({ queryKey: key });
+      void qc.invalidateQueries({ queryKey: ["meetings"] });
+    } catch (e) { toast.error((e as Error).message); }
+    finally { setSessionBusy(false); }
+  };
   const meta = [relativeDay(s.startedAt), formatDuration(s.durationMs)];
   if (s.speakerCount > 0) meta.push(`${s.speakerCount} speakers`);
 
@@ -117,7 +132,7 @@ export function MeetingPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onSelect={() => setEditingTitle(true)}>Rename</DropdownMenuItem>
-              <DropdownMenuItem disabled={!m.audioAvailable || processing} onSelect={reprocess}>
+              <DropdownMenuItem disabled={!m.audioAvailable || processing || paused} onSelect={reprocess}>
                 Transcribe again
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -131,6 +146,16 @@ export function MeetingPage() {
 
       <PageBody>
         <div className="mx-auto max-w-3xl px-8 pt-6 pb-4">
+          {paused && (
+            <div className="mb-5 rounded-xl border bg-card p-4">
+              <p className="font-medium">Session paused</p>
+              <p className="mt-1 text-xs text-muted-foreground">Saved on this computer. You can close Minutes and resume later. Break time is excluded; speakers are identified across the full session when you finish.</p>
+              <div className="mt-3 flex gap-2">
+                <Button size="sm" disabled={sessionBusy} onClick={() => sessionAction(true)}>Resume recording</Button>
+                <Button size="sm" variant="outline" disabled={sessionBusy} onClick={() => sessionAction(false)}>Finish and process</Button>
+              </div>
+            </div>
+          )}
           {editingTitle ? (
             <input
               autoFocus

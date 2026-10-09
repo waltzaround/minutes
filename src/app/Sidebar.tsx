@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { AlertCircle, FileText, Loader2, PanelLeft, Search, Settings, SquarePen, Users } from "lucide-react";
+import { useRecordingElapsed } from "@/features/recording/useRecordingElapsed";
 import { SearchDialog } from "@/features/search/SearchDialog";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router";
@@ -21,12 +22,7 @@ const itemClass = (active: boolean) =>
 
 function RecordingRow() {
   const { data: rec } = useRecordingStatus();
-  const [now, setNow] = useState(Date.now());
-  useEffect(() => {
-    if (!rec) return;
-    const t = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(t);
-  }, [rec]);
+  const elapsed = useRecordingElapsed(rec?.startedAt, rec?.elapsedMs ?? 0);
   if (!rec) return null;
   return (
     <NavLink
@@ -44,7 +40,7 @@ function RecordingRow() {
         <span className="relative inline-flex size-2 rounded-full bg-recording" />
       </span>
       <span className="flex-1 truncate">Recording</span>
-      <span className="font-mono text-xs tabular-nums">{formatClock(now - new Date(rec.startedAt).getTime())}</span>
+      <span className="font-mono text-xs tabular-nums">{formatClock(elapsed)}</span>
     </NavLink>
   );
 }
@@ -146,6 +142,7 @@ export function Sidebar() {
                         <span className="block truncate text-[13px] text-foreground/90">{m.title}</span>
                         <span className="block truncate text-[11px] text-muted-foreground">{meta}</span>
                       </span>
+                      {m.status === "paused" && <span className="text-[11px] text-muted-foreground">Paused</span>}
                       {m.status === "processing" && <Loader2 className="mt-0.5 size-3 shrink-0 animate-spin text-muted-foreground" aria-label="Processing" />}
                       {m.status === "failed" && <AlertCircle className="mt-0.5 size-3.5 shrink-0 text-destructive" aria-label="Needs attention" />}
                     </NavLink>

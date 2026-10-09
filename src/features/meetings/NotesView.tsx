@@ -182,7 +182,7 @@ export function NotesView({ meeting, onJump, actions }: { meeting: MeetingDetail
 
   const running = progress ? progress.status === "running" || progress.status === "pending" : analysis?.status === "running" || analysis?.status === "pending";
 
-  if (meeting.summary.status === "processing") {
+  if (meeting.summary.status === "processing" || meeting.summary.status === "paused") {
     return <p className="text-muted-foreground">Notes are written after the transcript is ready.</p>;
   }
   if (running) {

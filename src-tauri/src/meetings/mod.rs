@@ -15,6 +15,7 @@ use ts_rs::TS;
 #[ts(export)]
 pub enum MeetingStatus {
     Recording,
+    Paused,
     Processing,
     Ready,
     Failed,
@@ -26,6 +27,9 @@ impl MeetingStatus {
     pub fn as_db(self) -> &'static str {
         match self {
             MeetingStatus::Recording => "recording",
+            // The paused column distinguishes saved breaks without rebuilding
+            // the original status CHECK constraint and its foreign keys.
+            MeetingStatus::Paused => "interrupted",
             MeetingStatus::Processing => "processing",
             MeetingStatus::Ready => "ready",
             MeetingStatus::Failed => "failed",
@@ -36,6 +40,7 @@ impl MeetingStatus {
     pub fn from_db(s: &str) -> Self {
         match s {
             "recording" => MeetingStatus::Recording,
+            "paused" => MeetingStatus::Paused,
             "processing" => MeetingStatus::Processing,
             "ready" => MeetingStatus::Ready,
             "interrupted" => MeetingStatus::Interrupted,

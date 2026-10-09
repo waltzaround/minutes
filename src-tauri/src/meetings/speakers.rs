@@ -573,7 +573,7 @@ pub fn confirmed_speech_embeddings(
             continue;
         }
         let src = if source == "microphone" { AudioSource::Microphone } else { AudioSource::System };
-        let Some(t) = tracks.iter().find(|t| t.source == src && t.start_offset_ms <= s && std::path::Path::new(&t.path).exists()) else { continue };
+        let Some(t) = tracks.iter().filter(|t| t.source == src && t.start_offset_ms <= s && std::path::Path::new(&t.path).exists()).max_by_key(|t| t.start_offset_ms) else { continue };
         let mut buf = Vec::new();
         crate::audio::wav::stream_16k_mono(std::path::Path::new(&t.path), s - t.start_offset_ms, Some(e - t.start_offset_ms), |b| {
             buf.extend_from_slice(b);
@@ -591,6 +591,32 @@ pub fn confirmed_speech_embeddings(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn resumed_chunks_share_one_diarization_timeline() {
+        let root = tempfile::tempdir().unwrap();
+        let db = Database::open_in_memory().unwrap();
+        let (id, _, dir) = store::create_meeting(&db, "Class", root.path(), true, false, "keep_forever").unwrap();
+        std::fs::create_dir_all(&dir).unwrap();
+        for (index, offset, sample) in [(0, 0, 8000i16), (1, 1000, -8000i16)] {
+            let path = dir.join(format!("microphone-{index}.wav"));
+            let mut w = hound::WavWriter::create(&path, hound::WavSpec {
+                channels: 1, sample_rate: 16000, bits_per_sample: 16, sample_format: hound::SampleFormat::Int,
+            }).unwrap();
+            for _ in 0..16000 { w.write_sample(sample).unwrap(); }
+            w.finalize().unwrap();
+            let info = crate::audio::capture::TrackInfo {
+                source: AudioSource::Microphone, device_id: None, device_name: "Mic".into(),
+                sample_rate: 16000, channels: 1, path, start_offset_ms: offset,
+            };
+            store::insert_track(&db, &id, &info, index).unwrap();
+        }
+        let tracks = db.with(|c| store::tracks(c, &id)).unwrap();
+        let audio = assemble_track_audio(&tracks, AudioSource::Microphone).unwrap();
+        assert_eq!(audio.len(), 32000);
+        assert!(audio[8000] > 0.2);
+        assert!(audio[24000] < -0.2);
+    }
+
     use super::*;
 
     fn w(text: &str, s: u64, e: u64) -> Word {

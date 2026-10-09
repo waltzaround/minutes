@@ -118,3 +118,43 @@ This produces `src-tauri/target/release/bundle/dmg/*.dmg` on macOS and `…/nsis
 - [Packaging: macOS](docs/packaging-macos.md) · [Windows](docs/packaging-windows.md)
 - [Dependency verification log](docs/dependency-verification.md)
 - [Implementation status](docs/status.md)
+
+### Class breaks and saved recordings
+
+Use **Pause session** during a break. The session and audio remain saved across
+app restarts. Open it from the meeting list and choose **Resume recording** to
+append another recording chunk, or **Finish and process** to transcribe what
+has already been recorded. Break time is excluded from transcript timestamps.
+Quitting during a recording also saves it as paused; a forced quit uses the
+existing interrupted-recording recovery flow.
+
+Live transcripts remain provisional. Resumed sessions receive a complete
+transcription pass when finished, followed by speaker identification over all
+chunks together, so speaker numbers are not restarted after each break.
+Audio retention applies after successful processing, never while paused.
+
+Use **Import audio or video** on the New meeting screen for a saved recording.
+Minutes extracts the first audio track locally and runs the usual transcript,
+speaker identification, and notes workflow. The original file is untouched;
+the extracted audio follows the session's retention setting. Import currently
+requires FFmpeg installed on the computer (on macOS, `brew install ffmpeg`;
+on Windows/Linux, make `ffmpeg` available on PATH). Missing decoders, files
+without audio, and damaged files produce an error without leaving an empty
+session behind.
+
+To rerun the feature workflow checks with installed transcription models:
+
+```sh
+cd src-tauri
+MINUTES_TEST_MODELS="/path/to/installed/models" cargo test --lib workflow_tests -- --ignored --nocapture
+cargo test --lib real_device_pause_resume_survives_restart -- --ignored --nocapture
+```
+
+The first command creates a sample MP4, transcribes it, checks failed-import
+cleanup, and verifies resumed chunks replace provisional text without duplicates.
+It needs FFmpeg plus ASR/VAD models. The second records two brief microphone
+samples, pauses, reopens the database, and resumes. Both use temporary session
+storage. If bundled runtimes are absent from a development checkout, prefix
+these test commands with `TAURI_CONFIG='{"bundle":{"resources":[],"icon":[]}}'`.
+These checks cover transcription and session handling; full speaker identification
+and generated notes require their separate runtimes and models.

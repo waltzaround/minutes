@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import { meetingDetailApi } from "@/lib/api";
 import { useEffect, useRef, useState } from "react";
 import { EVENTS, useTauriEvent } from "@/lib/api/events";
 import type { LiveSegment } from "@/lib/types";
@@ -5,6 +7,7 @@ import { formatClock } from "@/lib/utils/format";
 
 /** Provisional transcript shown while recording. Speaker names may change after the meeting. */
 export function LiveTranscript({ meetingId }: { meetingId: string }) {
+  const { data: saved } = useQuery({ queryKey: ["liveTranscript", meetingId], queryFn: () => meetingDetailApi.get(meetingId) });
   const [segments, setSegments] = useState<LiveSegment[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
   const stick = useRef(true);
@@ -18,7 +21,12 @@ export function LiveTranscript({ meetingId }: { meetingId: string }) {
     if (stick.current) endRef.current?.scrollIntoView({ block: "end" });
   }, [segments]);
 
-  if (segments.length === 0) {
+  const all = [...new Map([
+    ...(saved?.segments ?? []).map((s): [string, LiveSegment] => [s.id, { ...s, meetingId, speakerLabel: s.source === "microphone" ? "Microphone" : "Speaker" }]),
+    ...segments.map((s): [string, LiveSegment] => [s.id, s]),
+  ]).values()].sort((a, b) => a.startMs - b.startMs);
+
+  if (all.length === 0) {
     return <p className="py-6 text-muted-foreground">The transcript appears here as people speak.</p>;
   }
   return (
@@ -30,7 +38,7 @@ export function LiveTranscript({ meetingId }: { meetingId: string }) {
         if (el) stick.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
       }}
     >
-      {segments.map((s) => (
+      {all.map((s) => (
         <div key={s.id} className="grid grid-cols-[120px_1fr] gap-4">
           <div className="text-xs leading-5">
             <div className="truncate font-medium">{s.speakerLabel}</div>

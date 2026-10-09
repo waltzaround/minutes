@@ -97,6 +97,7 @@ pub struct AudioLevel {
 
 pub struct StartOptions {
     pub title: Option<String>,
+    pub resume_id: Option<String>,
     pub microphone_device_id: Option<String>,
     pub output_device_id: Option<String>,
     pub capture_system: bool,
@@ -115,6 +116,7 @@ struct Track {
 struct Shared {
     meeting_id: String,
     started: Instant,
+    offset_ms: u64,
     status: Mutex<HashMap<AudioSource, SourceStatus>>,
     warnings: Mutex<Vec<MeetingWarning>>,
     track_ids: Mutex<HashMap<AudioSource, String>>,
@@ -182,12 +184,24 @@ impl Recorder {
         }
         let title = opts.title.clone().filter(|t| !t.trim().is_empty()).unwrap_or_else(store::default_title);
         let want_system = opts.capture_system;
-        let (meeting_id, started_at, audio_dir) =
-            store::create_meeting(&self.db, &title, &opts.meetings_root, true, want_system, &opts.retention)?;
+        let (meeting_id, started_at, audio_dir, title, offset_ms, next_segment) = if let Some(id) = &opts.resume_id {
+            let meeting = store::get_summary(&self.db, id)?.ok_or_else(|| RecorderError::StartFailed("That session could not be found.".into()))?;
+            if meeting.status != MeetingStatus::Paused {
+                return Err(RecorderError::StartFailed("Only paused sessions can be resumed.".into()));
+            }
+            let tracks = self.db.with(|c| store::tracks(c, id))?;
+            let next = tracks.iter().map(|t| t.segment_index).max().map(|n| n + 1).unwrap_or(0);
+            let dir = store::audio_dir(&self.db, id)?.ok_or_else(|| RecorderError::StartFailed("The session's audio folder is missing.".into()))?;
+            (id.clone(), meeting.started_at, dir, meeting.title, meeting.duration_ms.unwrap_or(0), next)
+        } else {
+            let (id, ts, dir) = store::create_meeting(&self.db, &title, &opts.meetings_root, true, want_system, &opts.retention)?;
+            (id, ts, dir, title, 0, 0)
+        };
         let started = Instant::now();
         let shared = Arc::new(Shared {
             meeting_id: meeting_id.clone(),
             started,
+            offset_ms,
             status: Mutex::new(HashMap::new()),
             warnings: Mutex::new(Vec::new()),
             track_ids: Mutex::new(HashMap::new()),
@@ -210,10 +224,10 @@ impl Recorder {
             ]),
         };
 
-        self.start_source(&mut active, AudioSource::Microphone, 0);
+        self.start_source(&mut active, AudioSource::Microphone, next_segment);
         if want_system {
             if opts.system_audio_available {
-                self.start_source(&mut active, AudioSource::System, 0);
+                self.start_source(&mut active, AudioSource::System, next_segment);
             } else {
                 self.set_source(&shared, AudioSource::System, SourceState::Failed, None, Some("Meeting audio capture is not available on this computer.".into()));
                 self.warn(&shared, WarningKind::SourceFailed, Some(AudioSource::System), "Meeting audio is not being recorded because capture is not available on this computer. Only your microphone is recorded.".into());
@@ -231,10 +245,13 @@ impl Recorder {
                 .get(&AudioSource::Microphone)
                 .and_then(|s| s.message.clone())
                 .unwrap_or_else(|| "No audio device could be opened.".into());
-            let _ = store::delete_meeting(&self.db, &meeting_id, &opts.meetings_root);
+            if opts.resume_id.is_none() {
+                let _ = store::delete_meeting(&self.db, &meeting_id, &opts.meetings_root);
+            }
             return Err(RecorderError::StartFailed(reason));
         }
 
+        self.db.with(|c| c.execute("UPDATE meetings SET status = 'recording', paused = 0, ended_at = NULL WHERE id = ?1", [&meeting_id]))?;
         active.pump = Some(spawn_pump(self.db.clone(), self.sink.clone(), shared.clone(), events_rx, active.pump_stop.clone()));
         let status = snapshot(&active);
         *guard = Some(active);
@@ -244,7 +261,7 @@ impl Recorder {
 
     fn start_source(&self, active: &mut Active, source: AudioSource, segment: u32) {
         let shared = active.shared.clone();
-        let offset = shared.started.elapsed().as_millis() as u64;
+        let offset = shared.offset_ms + shared.started.elapsed().as_millis() as u64;
         let path = active.audio_dir.join(format!("{}-{segment}.wav", source.as_str()));
         let req = CaptureRequest {
             source,
@@ -289,7 +306,7 @@ impl Recorder {
             kind,
             source,
             message,
-            at_ms: shared.started.elapsed().as_millis() as u64,
+            at_ms: shared.offset_ms + shared.started.elapsed().as_millis() as u64,
         };
         shared.warnings.lock().push(w.clone());
         (self.sink)(crate::events::MEETING_WARNING, serde_json::to_value(&w).unwrap_or_default());
@@ -312,7 +329,8 @@ impl Recorder {
                 }
                 t.segment + 1
             }
-            None => 0,
+            None => self.db.with(|c| store::tracks(c, &active.shared.meeting_id))?
+                .iter().filter(|t| t.source == source).map(|t| t.segment_index).max().map(|n| n + 1).unwrap_or(0),
         };
         self.start_source(active, source, next_segment);
         Ok(snapshot(active))
@@ -321,8 +339,16 @@ impl Recorder {
     /// Stop recording, finalise all audio files and mark the meeting as
     /// ready for processing. Returns the meeting id.
     pub fn stop(&self) -> Result<String, RecorderError> {
+        self.finish(MeetingStatus::Processing)
+    }
+
+    pub fn pause(&self) -> Result<String, RecorderError> {
+        self.finish(MeetingStatus::Paused)
+    }
+
+    fn finish(&self, status: MeetingStatus) -> Result<String, RecorderError> {
         let mut active = self.active.lock().take().ok_or(RecorderError::NotRecording)?;
-        let duration = active.shared.started.elapsed().as_millis() as u64;
+        let duration = active.shared.offset_ms + active.shared.started.elapsed().as_millis() as u64;
         for (source, mut t) in active.tracks.drain() {
             if let Some(h) = t.handle.take() {
                 let r = h.stop();
@@ -342,7 +368,7 @@ impl Recorder {
             let _ = p.join();
         }
         let id = active.shared.meeting_id.clone();
-        store::finish_recording(&self.db, &id, duration, MeetingStatus::Processing)?;
+        store::finish_recording(&self.db, &id, duration, status)?;
         (self.sink)(crate::events::MEETING_STATE, serde_json::json!({ "meetingId": id, "stopped": true }));
         Ok(id)
     }
@@ -357,7 +383,7 @@ fn snapshot(a: &Active) -> RecordingStatus {
         meeting_id: a.shared.meeting_id.clone(),
         title: a.title.clone(),
         started_at: a.started_at.clone(),
-        elapsed_ms: a.shared.started.elapsed().as_millis() as u64,
+        elapsed_ms: a.shared.offset_ms + a.shared.started.elapsed().as_millis() as u64,
         microphone: get(AudioSource::Microphone),
         system: get(AudioSource::System),
         warnings: a.shared.warnings.lock().clone(),
@@ -385,7 +411,7 @@ fn spawn_pump(
                     kind,
                     source,
                     message,
-                    at_ms: shared.started.elapsed().as_millis() as u64,
+                    at_ms: shared.offset_ms + shared.started.elapsed().as_millis() as u64,
                 };
                 shared.warnings.lock().push(w.clone());
                 sink(crate::events::MEETING_WARNING, serde_json::to_value(&w).unwrap_or_default());
@@ -411,7 +437,7 @@ fn spawn_pump(
                         if already {
                             continue;
                         }
-                        let at = shared.started.elapsed().as_millis() as u64;
+                        let at = shared.offset_ms + shared.started.elapsed().as_millis() as u64;
                         {
                             let mut st = shared.status.lock();
                             let prev = st.get(&source).and_then(|s| s.device_name.clone());
@@ -510,6 +536,52 @@ mod tests {
         assert!((meter_level(0.0316) - 0.5).abs() < 0.01); // −30 dBFS
     }
 
+    /// Hardware regression test using disposable recordings and a DB reopen.
+    #[test]
+    #[ignore = "records two short samples from the default microphone"]
+    fn real_device_pause_resume_survives_restart() {
+        let root = tempfile::tempdir().unwrap();
+        let db_path = root.path().join("minutes.db");
+        let db = Database::open(&db_path).unwrap();
+        let opts = |resume_id| StartOptions {
+            title: Some("Hardware pause test".into()), resume_id,
+            microphone_device_id: None, output_device_id: None,
+            capture_system: false, system_audio_available: false,
+            retention: "keep_forever".into(), meetings_root: root.path().join("meetings"), speech: None,
+        };
+        let rec = Recorder::new(db.clone(), Arc::new(|_, _| {}));
+        let first = rec.start(opts(None)).unwrap();
+        std::thread::sleep(Duration::from_millis(1200));
+        assert_eq!(rec.pause().unwrap(), first.meeting_id);
+        assert!(!rec.is_recording());
+        let saved = store::get_summary(&db, &first.meeting_id).unwrap().unwrap();
+        assert_eq!(saved.status, MeetingStatus::Paused);
+        let tracks = db.with(|c| store::tracks(c, &first.meeting_id)).unwrap();
+        let original = std::fs::read(&tracks[0].path).unwrap();
+        drop(rec);
+        drop(db);
+        std::thread::sleep(Duration::from_secs(2));
+        let db = Database::open(&db_path).unwrap();
+        assert!(store::mark_interrupted(&db).unwrap().is_empty());
+        let rec = Recorder::new(db.clone(), Arc::new(|_, _| {}));
+        let resumed = rec.start(opts(Some(first.meeting_id.clone()))).unwrap();
+        assert_eq!(resumed.meeting_id, first.meeting_id);
+        assert!(resumed.elapsed_ms < saved.duration_ms.unwrap() + 1500, "break time was included");
+        std::thread::sleep(Duration::from_millis(1200));
+        rec.stop().unwrap();
+        let tracks = db.with(|c| store::tracks(c, &first.meeting_id)).unwrap();
+        assert_eq!(tracks.len(), 2);
+        assert_eq!(tracks[0].segment_index, 0);
+        assert_eq!(tracks[1].segment_index, 1);
+        assert!(tracks[1].start_offset_ms >= saved.duration_ms.unwrap());
+        assert_eq!(std::fs::read(&tracks[0].path).unwrap(), original, "resume overwrote the first chunk");
+        for t in &tracks {
+            assert!(crate::audio::wav::duration_ms(std::path::Path::new(&t.path)).unwrap() >= 800);
+        }
+        assert_eq!(store::get_summary(&db, &first.meeting_id).unwrap().unwrap().status, MeetingStatus::Processing);
+        println!("Microphone pause/reopen/resume: two intact chunks, break excluded");
+    }
+
     /// Records from the real default devices for one second. Ignored by
     /// default because CI machines have no audio hardware; run locally with
     /// `cargo test -- --ignored real_device`.
@@ -524,6 +596,7 @@ mod tests {
         let status = rec
             .start(StartOptions {
                 title: Some("Test".into()),
+                resume_id: None,
                 microphone_device_id: None,
                 output_device_id: None,
                 capture_system: true,

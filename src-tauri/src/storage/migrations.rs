@@ -14,6 +14,7 @@ pub struct Migration {
 pub const MIGRATIONS: &[Migration] = &[
     Migration { version: 1, name: "initial", sql: include_str!("migrations/0001_initial.sql") },
     Migration { version: 2, name: "action_item_labels", sql: include_str!("migrations/0002_action_item_labels.sql") },
+    Migration { version: 3, name: "paused_sessions", sql: include_str!("migrations/0003_paused_sessions.sql") },
 ];
 
 pub fn current_version(conn: &Connection) -> rusqlite::Result<u32> {

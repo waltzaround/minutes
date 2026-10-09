@@ -116,6 +116,10 @@ pub fn run() {
             commands::models::required_download_space,
             commands::meetings::start_meeting,
             commands::meetings::stop_meeting,
+            commands::meetings::pause_meeting,
+            commands::meetings::resume_meeting,
+            commands::meetings::finish_paused_meeting,
+            commands::meetings::import_media,
             commands::meetings::get_recording_status,
             commands::meetings::reconnect_source,
             commands::meetings::list_meetings,
@@ -170,8 +174,10 @@ pub fn run() {
                 if let Some(state) = app.try_state::<AppState>() {
                     state.enrollment.cancel();
                     if state.recorder.is_recording() {
-                        // Finalise audio so nothing is lost; processing resumes next launch.
-                        let _ = state.recorder.stop();
+                        // Save a resumable break on normal exit. Forced quits still
+                        // use interrupted-recording recovery.
+                        let _ = state.recorder.pause();
+                        state.drain_live_transcription();
                     }
                     state.analysis.shutdown_runtime();
                 }
