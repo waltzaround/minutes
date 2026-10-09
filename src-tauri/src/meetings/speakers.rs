@@ -764,8 +764,11 @@ mod pipeline_tests {
             let label = clusters.iter().find(|c| Some(&c.id) == s.speaker_cluster_id.as_ref()).map(|c| c.label.clone()).unwrap_or_default();
             println!("{:>6} {:<10} {}", s.start_ms, label, s.text);
         }
-        assert_eq!(clusters.len(), 2);
-        assert!(clusters.iter().any(|c| matches!(&c.identity, SpeakerIdentity::Known { person_id, .. } if *person_id == alice.id)));
+        // The diarizer may retain unused clusters. The UI and meeting count
+        // show only speakers actually attached to transcript segments.
+        let used: std::collections::HashSet<&str> = segs.iter().filter_map(|s| s.speaker_cluster_id.as_deref()).collect();
+        assert_eq!(used.len(), 2, "two speakers should have transcribed speech");
+        assert!(clusters.iter().any(|c| used.contains(c.id.as_str()) && matches!(&c.identity, SpeakerIdentity::Known { person_id, .. } if *person_id == alice.id)));
         assert!(segs.iter().all(|s| s.speaker_cluster_id.is_some()));
     }
 }
