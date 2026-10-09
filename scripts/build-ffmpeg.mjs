@@ -47,7 +47,9 @@ const stamp = join(build, "minutes-recipe");
 if (!existsSync(stamp) || readFileSync(stamp, "utf8") !== recipe || !existsSync(join(build, binary))) {
   rmSync(src, { recursive: true, force: true });
   rmSync(build, { recursive: true, force: true });
-  execFileSync("tar", ["-xf", archive, "-C", cache], { stdio: "inherit" });
+  // Use a relative archive name: GNU tar treats Windows drive letters
+  // as remote-host prefixes when given an absolute archive path.
+  execFileSync("tar", ["-xf", `ffmpeg-${VERSION}.tar.xz`], { cwd: cache, stdio: "inherit" });
   mkdirSync(build, { recursive: true });
   const shellPath = (path) => isWin ? path.replaceAll("\\", "/").replace(/^([A-Za-z]):/, (_, drive) => `/${drive.toLowerCase()}`) : path;
   const quote = (value) => `'${value.replaceAll("'", "'\\''")}'`;
