@@ -42,6 +42,7 @@ pub struct AppState {
     pub enrollment: EnrollmentManager,
     pub analysis: Arc<AnalysisService>,
     pub llama_runtime_dir: PathBuf,
+    pub ffmpeg_runtime_dir: PathBuf,
     live: parking_lot::Mutex<Option<(String, LiveTranscriber)>>,
 }
 
@@ -125,6 +126,7 @@ impl AppState {
             enrollment: EnrollmentManager::default(),
             analysis,
             llama_runtime_dir,
+            ffmpeg_runtime_dir: PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("binaries/ffmpeg"),
             live: parking_lot::Mutex::new(None),
         })
     }

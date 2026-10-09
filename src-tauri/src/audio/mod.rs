@@ -3,5 +3,6 @@
 
 pub mod capture;
 pub mod devices;
+pub mod media;
 pub mod resample;
 pub mod wav;

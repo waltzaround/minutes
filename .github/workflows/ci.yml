@@ -47,6 +47,19 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Fetch pinned llama.cpp runtime (SHA-256 verified)
         run: node scripts/fetch-llama.mjs ${{ matrix.llama }}
+      - uses: msys2/setup-msys2@v2
+        if: runner.os == 'Windows'
+        with:
+          msystem: MINGW64
+          path-type: inherit
+          install: mingw-w64-x86_64-gcc make diffutils
+      - name: Build bundled FFmpeg decoder (macOS, pinned source)
+        if: runner.os == 'macOS'
+        run: node scripts/build-ffmpeg.mjs macos-arm64
+      - name: Build bundled FFmpeg decoder (Windows, pinned source)
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: node scripts/build-ffmpeg.mjs win-x64
 
       - name: Build tools for NeMo-Speech.cpp (macOS)
         if: runner.os == 'macOS'

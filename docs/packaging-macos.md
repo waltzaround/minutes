@@ -4,6 +4,7 @@
 
 ```bash
 node scripts/fetch-llama.mjs
+node scripts/build-ffmpeg.mjs
 ```
 
 ```bash
@@ -17,6 +18,7 @@ This produces `src-tauri/target/release/bundle/macos/Minutes.app` and `…/dmg/M
 - **Entitlements** (`src-tauri/entitlements.plist`): `com.apple.security.device.audio-input`. The hardened runtime is enabled.
 - **llama.cpp runtime:** bundled as a resource at `Contents/Resources/llama/`. It includes `llama-server`, `libllama-server-impl.dylib` and the `lib*.0.dylib` libraries, resolved via `@loader_path`.
 - **NeMo-Speech.cpp diarization runtime:** bundled at `Contents/Resources/nemo-speech/` (`nemo-speech` + ggml dylibs via `@loader_path`), built by `scripts/build-nemo-speech.mjs`. Sign it along with the llama runtime.
+- **Media decoder:** standalone FFmpeg bundled at `Contents/Resources/ffmpeg/ffmpeg`. Built with Xcode command-line tools from pinned, SHA-256 verified official source by `scripts/build-ffmpeg.mjs`, with no external codec libraries. The LGPL license, corresponding source and recipe are included. Imports never require Homebrew or a system FFmpeg installation.
 - **sherpa-onnx and ONNX Runtime** are linked statically into the app binary, so there are no extra dylibs.
 
 ### DMG step in headless sessions
@@ -44,7 +46,7 @@ The v0.1 DMG (24 MB) was produced this way on the development machine. The relea
    - `APPLE_ID`, `APPLE_PASSWORD` (app-specific password) and `APPLE_TEAM_ID`, or an App Store Connect API key.
 2. **Sign the sidecar before bundling.** Tauri signs the main binary but not resources, so the llama runtime must be signed with the same identity and the hardened runtime:
    ```bash
-   for f in src-tauri/binaries/llama/*.dylib src-tauri/binaries/llama/llama-server src-tauri/binaries/nemo-speech/*.dylib src-tauri/binaries/nemo-speech/nemo-speech; do
+   for f in src-tauri/binaries/llama/*.dylib src-tauri/binaries/llama/llama-server src-tauri/binaries/nemo-speech/*.dylib src-tauri/binaries/nemo-speech/nemo-speech src-tauri/binaries/ffmpeg/ffmpeg; do
      codesign --force --timestamp --options runtime --sign "$APPLE_SIGNING_IDENTITY" "$f"
    done
    ```

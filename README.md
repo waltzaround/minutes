@@ -35,10 +35,13 @@ Prerequisites:
 pnpm install
 ```
 
-Download the pinned llama.cpp runtime for this platform. It is SHA-256 verified.
+Prepare the pinned llama.cpp runtime and bundled FFmpeg decoder for this platform.
+Downloads are SHA-256 verified. FFmpeg builds from source with Xcode tools on
+macOS; on Windows use a MSYS2 MINGW64 shell with GCC and GNU Make installed.
 
 ```bash
 node scripts/fetch-llama.mjs
+node scripts/build-ffmpeg.mjs
 ```
 
 Build the pinned diarization runtime (NeMo-Speech.cpp, needs CMake and Ninja; on macOS `brew install cmake ninja`):
@@ -100,6 +103,10 @@ pnpm types
 
 ## Building installers
 
+Prepare the bundled decoder with `node scripts/build-ffmpeg.mjs` on macOS or
+`node scripts/build-ffmpeg.mjs win-x64` on Windows before building. CI does this
+for both installers. Release builds reject a missing or wrong-target decoder.
+
 ```bash
 pnpm tauri build
 ```
@@ -136,11 +143,10 @@ Audio retention applies after successful processing, never while paused.
 Use **Import audio or video** on the New meeting screen for a saved recording.
 Minutes extracts the first audio track locally and runs the usual transcript,
 speaker identification, and notes workflow. The original file is untouched;
-the extracted audio follows the session's retention setting. Import currently
-requires FFmpeg installed on the computer (on macOS, `brew install ffmpeg`;
-on Windows/Linux, make `ffmpeg` available on PATH). Missing decoders, files
-without audio, and damaged files produce an error without leaving an empty
-session behind.
+the extracted audio follows the session's retention setting. FFmpeg is included
+with Minutes on macOS and Windows, so no separate installation or PATH changes
+are needed. Files without audio and damaged files produce an error without
+leaving an empty session behind.
 
 To rerun the feature workflow checks with installed transcription models:
 
@@ -152,7 +158,7 @@ cargo test --lib real_device_pause_resume_survives_restart -- --ignored --nocapt
 
 The first command creates a sample MP4, transcribes it, checks failed-import
 cleanup, and verifies resumed chunks replace provisional text without duplicates.
-It needs FFmpeg plus ASR/VAD models. The second records two brief microphone
+It needs the bundled FFmpeg decoder plus ASR/VAD models. The second records two brief microphone
 samples, pauses, reopens the database, and resumes. Both use temporary session
 storage. If bundled runtimes are absent from a development checkout, prefix
 these test commands with `TAURI_CONFIG='{"bundle":{"resources":[],"icon":[]}}'`.

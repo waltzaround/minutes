@@ -73,10 +73,17 @@ pub fn run() {
             } else {
                 std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("binaries/llama")
             };
-            let state = AppState::new(paths, sink, runtime_dir).map_err(|e| {
+            let mut state = AppState::new(paths, sink, runtime_dir).map_err(|e| {
                 tracing::error!(error = ?e, "failed to initialise application state");
                 e
             })?;
+            let bundled_ffmpeg = path.resource_dir()?.join("ffmpeg");
+            state.ffmpeg_runtime_dir = if !cfg!(debug_assertions)
+                || audio::media::runtime_binary(&bundled_ffmpeg).is_file() {
+                bundled_ffmpeg
+            } else {
+                std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("binaries/ffmpeg")
+            };
             // Bundled NeMo-Speech.cpp diarization runtime (dev: src-tauri/binaries).
             let bundled_nemo = path.resource_dir().map(|d| d.join("nemo-speech")).unwrap_or_default();
             let nemo_dir = if speech::diarization::runtime_binary(&bundled_nemo).exists() || !cfg!(debug_assertions) {

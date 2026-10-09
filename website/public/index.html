@@ -164,6 +164,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <a href="#requirements">Requirements</a>
       <a href="#patch-notes">Patch notes</a>
       <a href="#faq">FAQ</a>
+      <a href="https://github.com/waltzaround/minutes-releases">GitHub</a>
     </div>
   </nav>
 </header>
@@ -177,7 +178,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <a class="btn primary" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-macOS-arm64.dmg"><span class="dot"></span>Download for macOS</a>
       <a class="btn" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-Windows-x64-setup.exe">Download for Windows</a>
     </div>
-    <p class="fine">v0.1.2 preview · macOS 14.6+ (Apple Silicon) · Windows 10+ (x64)<br>Unsigned builds · <a href="#install">Install notes</a> · <a href="#patch-notes">What’s new</a></p>
+    <p class="fine">v0.1.3 preview · macOS 14.6+ (Apple Silicon) · Windows 10+ (x64)<br>Unsigned builds · <a href="#install">Install notes</a> · <a href="#patch-notes">What’s new</a></p>
 
     <div class="mock" aria-label="Screenshot of the Minutes app showing meeting notes" role="img">
       <div class="side">
@@ -320,7 +321,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <h2>New in Minutes</h2>
       <article class="card release-notes">
         <p class="muted"><time datetime="2026-10-09">9 October 2026</time> · Preview</p>
-        <h3>v0.1.2 — Class breaks and saved recordings</h3>
+        <h3>v0.1.3 — Class breaks and saved recordings</h3>
         <ul>
           <li>Pause a session for a break, close Minutes, and resume the same recording later.</li>
           <li>Break time is excluded from timers and transcript timestamps. Earlier audio chunks are preserved.</li>
@@ -329,7 +330,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           <li>Import requires <a href="#import">FFmpeg installed separately</a>. Missing or damaged files, and videos without an audio track, produce a clear error.</li>
         </ul>
         <p class="fine">Already installed? Install the new version to keep your meetings and downloaded models. Preview builds are unsigned; review AI-generated notes before using them.</p>
-        <p class="fine"><a href="https://github.com/waltzaround/minutes-releases/releases/tag/v0.1.2">Full release notes and checksums</a></p>
+        <p class="fine"><a href="https://github.com/waltzaround/minutes-releases/releases/tag/v0.1.3">Full release notes and checksums</a></p>
       </article>
       <article class="card release-notes">
         <p class="muted"><time datetime="2026-10-03">3 October 2026</time> · Preview</p>
@@ -354,7 +355,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       <div class="faq">
         <details><summary>Does anything get uploaded?</summary><p>No. The only network requests are to download models, and to Notion or Linear if you connect them and approve a sync.</p></details>
         <details><summary>Can I pause during a class break?</summary><p>Yes. Choose Pause session, then open that session and choose Resume recording when the class continues. You can close Minutes while paused. Break time is excluded, and speakers are identified across the full session when you finish.</p></details>
-        <details id="import"><summary>How do I import audio or video?</summary><p>Choose Import audio or video on the New meeting screen. Import needs FFmpeg installed separately: on macOS, use <code>brew install ffmpeg</code>; on Windows, install FFmpeg and add its executable folder to PATH. Minutes extracts the first audio track locally and follows the same transcript and notes workflow. It leaves the original file untouched.</p></details>
+        <details id="import"><summary>How do I import audio or video?</summary><p>Choose Import audio or video on the New meeting screen. Minutes includes FFmpeg on both macOS and Windows, so no separate installation or PATH changes are needed. Minutes extracts the first audio track locally and follows the same transcript and notes workflow. It leaves the original file untouched.</p></details>
         <details><summary>Do I need a bot in the call?</summary><p>No. Minutes captures your computer's audio output directly, so it works with any meeting app, and in the room with just the microphone.</p></details>
         <details><summary>How accurate is it?</summary><p>Parakeet TDT v3 is one of the most accurate open speech models. Every note links to the transcript it came from, so you can check it, and you can edit anything.</p></details>
         <details><summary>Should I tell people I'm recording?</summary><p>Yes. Minutes reminds you to let everyone know before you start. Recording laws vary, so check what applies where you are.</p></details>
@@ -369,14 +370,14 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     <h2>Take better notes by taking none.</h2>
     <p class="muted" style="margin-top:14px">Minutes is in early preview on macOS and Windows.</p>
     <div class="cta"><a class="btn primary" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-macOS-arm64.dmg"><span class="dot"></span>Download for macOS</a><a class="btn" href="https://github.com/waltzaround/minutes-releases/releases/latest/download/Minutes-Windows-x64-setup.exe">Download for Windows</a></div>
-    <p class="fine">v0.1.2 preview · <a href="#patch-notes">Read the patch notes</a></p>
+    <p class="fine">v0.1.3 preview · <a href="#patch-notes">Read the patch notes</a></p>
   </div>
 </main>
 
 <footer>
   <div class="wrap">
     <span>© 2026 Minutes · This website uses Google Analytics to count visits. The app itself sends nothing.</span>
-    <span>Built with Parakeet, Nemotron, sherpa-onnx, NeMo-Speech.cpp and llama.cpp.</span>
+    <span><a href="https://github.com/waltzaround/minutes-releases">Releases on GitHub</a> · Built with Parakeet, Nemotron, sherpa-onnx, NeMo-Speech.cpp and llama.cpp.</span>
   </div>
 </footer>
 <script>

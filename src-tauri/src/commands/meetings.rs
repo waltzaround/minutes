@@ -266,19 +266,7 @@ async fn import_media_file(state: &AppState, path: String) -> AppResult<String> 
     let result = async {
         tokio::fs::create_dir_all(&dir).await.map_err(|e| AppError::Internal(e.into()))?;
         let output = dir.join("system-0.wav");
-        let ffmpeg = ["/opt/homebrew/bin/ffmpeg", "/usr/local/bin/ffmpeg"]
-            .into_iter().find(|p| std::path::Path::new(p).is_file()).unwrap_or("ffmpeg");
-        let status = tokio::process::Command::new(ffmpeg)
-            .args(["-nostdin", "-v", "error", "-y", "-i"]).arg(&input)
-            .args(["-map", "0:a:0", "-vn", "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le"])
-            .arg(&output).kill_on_drop(true).output().await
-            .map_err(|e| if e.kind() == std::io::ErrorKind::NotFound {
-                AppError::user("decoder_missing", "Video and audio import requires FFmpeg. Install FFmpeg, then try importing again.")
-            } else { AppError::Internal(e.into()) })?;
-        if !status.status.success() {
-            tracing::warn!(error = %String::from_utf8_lossy(&status.stderr), "media decode failed");
-            return Err(AppError::user("decode_failed", "This file could not be read. It may be damaged, unsupported, or have no audio track."));
-        }
+        crate::audio::media::extract_audio(&state.ffmpeg_runtime_dir, &input, &output).await?;
         let duration = wav::duration_ms(&output).filter(|d| *d > 0)
             .ok_or_else(|| AppError::user("empty_audio", "This file has no audio to transcribe."))?;
         let info = crate::audio::capture::TrackInfo {
@@ -341,14 +329,14 @@ mod workflow_tests {
     }
 
     #[tokio::test]
-    #[ignore = "requires FFmpeg and installed ASR/VAD models; set MINUTES_TEST_MODELS"]
+    #[ignore = "requires bundled FFmpeg and installed ASR/VAD models; set MINUTES_TEST_MODELS"]
     async fn video_import_real_transcription_and_invalid_files() {
         let root = tempfile::tempdir().unwrap();
         let state = isolated_state(root.path(), true);
         let sample = std::path::PathBuf::from(std::env::var("MINUTES_TEST_MODELS").unwrap())
             .join("parakeet-tdt-0.6b-v3-int8/test_wavs/en.wav");
         let video = root.path().join("Class recording.mp4");
-        let result = tokio::process::Command::new("ffmpeg").args(["-nostdin", "-v", "error", "-f", "lavfi", "-i", "color=c=black:s=160x120:r=10"])
+        let result = tokio::process::Command::new(crate::audio::media::runtime_binary(&state.ffmpeg_runtime_dir)).args(["-nostdin", "-v", "error", "-f", "lavfi", "-i", "color=c=black:s=160x120:r=10"])
             .arg("-i").arg(&sample).args(["-c:v", "mpeg4", "-c:a", "aac", "-shortest"]).arg(&video).output().await.unwrap();
         assert!(result.status.success(), "{}", String::from_utf8_lossy(&result.stderr));
         let original = std::fs::read(&video).unwrap();
@@ -368,7 +356,7 @@ mod workflow_tests {
         std::fs::write(&bad, b"not a video").unwrap();
         assert!(import_media_file(&state, bad.display().to_string()).await.is_err());
         let silent = root.path().join("silent.mp4");
-        let result = tokio::process::Command::new("ffmpeg").args(["-nostdin", "-v", "error", "-f", "lavfi", "-i", "color=c=black:s=160x120:d=1", "-an", "-c:v", "mpeg4"]).arg(&silent).output().await.unwrap();
+        let result = tokio::process::Command::new(crate::audio::media::runtime_binary(&state.ffmpeg_runtime_dir)).args(["-nostdin", "-v", "error", "-f", "lavfi", "-i", "color=c=black:s=160x120:d=1", "-an", "-c:v", "mpeg4"]).arg(&silent).output().await.unwrap();
         assert!(result.status.success());
         assert!(import_media_file(&state, silent.display().to_string()).await.is_err());
         assert!(import_media_file(&state, root.path().join("missing.mp4").display().to_string()).await.is_err());

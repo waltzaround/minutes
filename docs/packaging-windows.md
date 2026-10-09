@@ -12,6 +12,13 @@ pnpm install
 node scripts/fetch-llama.mjs win-x64
 ```
 
+Build the standalone FFmpeg decoder in a MSYS2 MINGW64 shell with Node on PATH:
+
+```bash
+pacman -S --needed mingw-w64-x86_64-gcc make diffutils
+node scripts/build-ffmpeg.mjs win-x64
+```
+
 Build the diarization runtime from a Visual Studio 2022 Developer PowerShell, with CMake 3.26+, Ninja, and `sentencepiece:x64-windows-static` installed through vcpkg. Set `CMAKE_TOOLCHAIN_FILE` to vcpkg's `scripts/buildsystems/vcpkg.cmake`. If using a separate vcpkg manifest, also set `VCPKG_INSTALLED_DIR` to its `vcpkg_installed` directory.
 
 ```powershell
@@ -29,11 +36,12 @@ This produces `src-tauri\target\release\bundle\nsis\Minutes_0.1.0_x64-setup.exe`
 - **llama.cpp runtime:** the Vulkan build, bundled at `resources\llama\`. It includes `llama-server.exe`, `ggml-vulkan.dll` and CPU backend DLLs for SSE4.2/AVX2/AVX-512/Zen4, selected at runtime. It uses NVIDIA, AMD or Intel GPUs through Vulkan and falls back to the CPU, so no NVIDIA-specific build is required.
   - A CUDA build exists upstream but is about 650 MB with cudart. It could be offered later as an optional download.
 - **Diarization runtime:** NeMo-Speech.cpp CPU build from `scripts/build-nemo-speech.mjs` (needs `vcpkg install sentencepiece:x64-windows-static` and `CMAKE_TOOLCHAIN_FILE`), bundled at `resources\nemo-speech\`.
+- **Media decoder:** standalone FFmpeg bundled at `resources\ffmpeg\ffmpeg.exe`. Built from pinned, SHA-256 verified official source by `scripts/build-ffmpeg.mjs win-x64`, with static MinGW runtime linkage and no external codec libraries. The LGPL license, corresponding source and recipe are included. Imports need no separate installation or PATH changes and run without a console window.
 - **llama-server** is started with `CREATE_NO_WINDOW`, so no console window appears.
 
 ## Signing
 
-Set `bundle.windows.certificateThumbprint` (or use `signCommand` for an HSM or Azure Trusted Signing). Sign `llama-server.exe` and the bundled DLLs before building, then Tauri signs the installer and main executable.
+Set `bundle.windows.certificateThumbprint` (or use `signCommand` for an HSM or Azure Trusted Signing). Sign `llama-server.exe`, `ffmpeg.exe` and the bundled DLLs before building, then Tauri signs the installer and main executable.
 
 ## Verification status
 
